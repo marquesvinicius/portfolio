@@ -51,6 +51,10 @@ body {
     text-decoration: underline;
 }
 
+.ativo {
+    font-weight: bold;
+}
+
 #inicio {
     background: linear-gradient(63.13deg, #232B2B 51.04%, #65010B 51.05%);
     height: 100vh;
@@ -65,7 +69,7 @@ body {
 
 
 
-@keyframes fotoAnimacao {
+/* @keyframes fotoAnimacao {
     from {
         top: -10px;
     }
@@ -73,14 +77,14 @@ body {
     to {
         top: 25px;
     }
-}
+} */
 
 .foto-circular {
     width: 600px;
     height: 700px;
     border-radius: 50%;
     position: relative;
-    animation: fotoAnimacao 2.1s infinite alternate-reverse linear;
+    /* animation: fotoAnimacao 2.1s infinite alternate-reverse linear; */
 }
 
 .apresentacao__nome {
@@ -105,10 +109,6 @@ body {
     transition: all 0.3s;
 }
 
-.github__link___img:hover,
-.linkedin__link___img:hover {
-    width: 92px;
-}
 
 #sobre {
     height: 50vh;
@@ -153,6 +153,8 @@ body {
     display: flex;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .lista-projetos-item {
@@ -161,6 +163,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 .lista-projetos-item-link {
@@ -172,11 +175,38 @@ body {
     text-decoration-color: #F7F3E3;
 }
 
-.lista-projetos-item-link-imagem {
+.lista-projetos-item-link-figure {
     width: 400px;
     height: 300px;
-
+    transition: ease-in-out 0.3s;
 }
+
+.lista-projetos-item-link-figure:hover .lista-projetos-item-link-figure-imagem {
+    opacity: 50%;
+}
+
+
+.lista-projetos-item-link-figure-imagem {
+    width: 100%;
+    height: 100%;
+}
+
+
+.lista-projetos-item-link-figure-legenda {
+    visibility: hidden;
+    opacity: 100% !important;
+    color: #FFFFFF;
+    position: absolute;
+    text-align: center;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.lista-projetos-item-link-figure:hover .lista-projetos-item-link-figure-legenda {
+    visibility: visible;
+}
+
 
 
 .texto-projeto {
@@ -212,4 +242,88 @@ body {
 
 #ver-mais-button:active {
     font-weight: bold;
+}
+
+#habilidades {
+    background: linear-gradient(116.87deg, #65010B 51.4%, #B3B6B7 49.05%);
+    height: 78vh;
+    width: 100%;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.separador-icones {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lista-habilidades {
+    display: flex;
+    justify-content: space-around;
+    gap: 40px;
+    flex-wrap: wrap;
+    width: 50%;
+}
+
+.lista-habilidades-block {
+    width: 100px;
+    height: 100px;
+    background-color: #F7F3E3;
+    border: 2px solid #F7F3E3;
+    border-radius: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: ease-in-out 0.5s;
+}
+
+.lista-habilidades-block:hover {
+    background-color: #F7F3E3;
+    cursor: pointer;
+    scale: 1.1;
+}
+
+.separador-descricao {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+#habilidades h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.habilidades-descricao {
+    font-size: 20px;
+    width: 60%;
+    
+}
+
+@media screen and (max-width: 950px) {
+
+    #inicio,
+    #sobre,
+    #projetos {
+        flex-direction: column;
+    }
+
+    #inicio {
+        flex-direction: column-reverse;
+    }
+
+    #inicio img {
+        width: 20px;
+    }
 }
