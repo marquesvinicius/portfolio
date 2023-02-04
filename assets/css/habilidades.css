@@ -93,6 +93,6 @@
 
 @media (max-width: 516px) {
     #habilidades {
-        height: 100vh;
+        height: 100%;
     }
 }
