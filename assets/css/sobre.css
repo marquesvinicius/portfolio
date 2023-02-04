@@ -1,0 +1,57 @@
+#sobre {
+    height: 50vh;
+    width: 100%;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #B3B6B7;
+}
+
+
+.descricao-sobre-mim {
+    margin-left: 5rem;
+    font-size: 1.25rem;
+    width: 25%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+#sobre h2 {
+    font-size: 48px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+
+@media (max-width: 1024px) {
+
+    .foto-dev {
+        display: none;
+    }
+
+    .descricao-sobre-mim {
+        width: 90%;
+        margin-left: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        align-items: center;
+        
+    }
+
+
+    #sobre {
+        flex-direction: column-reverse;
+        padding-top: 0;
+        padding-bottom: 0;
+
+    }
+
+
+  }

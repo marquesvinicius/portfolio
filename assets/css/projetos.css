@@ -1,0 +1,110 @@
+#projetos {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#projetos h2 {
+    color: #F7F3E3;
+    font-size: 3rem;
+    padding-bottom: 10px;
+    font-weight: 600;
+}
+
+.lista-projetos {
+    display: flex;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.lista-projetos-item {
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.lista-projetos-item-link {
+    text-decoration: none;
+}
+
+.lista-projetos-item-link:hover {
+    text-decoration: underline;
+    text-decoration-color: #F7F3E3;
+}
+
+.lista-projetos-item-link-figure {
+    width: 400px;
+    height: 300px;
+    transition: ease-in-out 0.3s;
+}
+
+.lista-projetos-item-link-figure:hover .lista-projetos-item-link-figure-imagem {
+    opacity: 50%;
+}
+
+
+.lista-projetos-item-link-figure-imagem {
+    width: 100%;
+    height: 100%;
+}
+
+
+.lista-projetos-item-link-figure-legenda {
+    visibility: hidden;
+    opacity: 100% !important;
+    color: #FFFFFF;
+    position: absolute;
+    text-align: center;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.lista-projetos-item-link-figure:hover .lista-projetos-item-link-figure-legenda {
+    visibility: visible;
+}
+
+
+
+.texto-projeto {
+    color: #F7F3E3;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.texto-projeto h3 {
+    font-weight: bold;
+}
+
+#ver-mais-button {
+    color: #F7F3E3;
+    font-size: 20px;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 100px;
+    background-color: #65010B;
+    border-style: none;
+    cursor: pointer;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+}
+
+#ver-mais-button:hover {
+    border: 1px solid #F7F3E3;
+}
+
+#ver-mais-button:active {
+    font-weight: bold;
+}

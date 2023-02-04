@@ -1,0 +1,77 @@
+#inicio {
+    background: linear-gradient(63.13deg, #232B2B 51.04%, #65010B 51.05%);
+    height: 100vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.separador-apresentacao {
+    color: #F7F3E3;
+}
+
+
+
+/* @keyframes fotoAnimacao {
+    from {
+        top: -10px;
+    }
+
+    to {
+        top: 25px;
+    }
+} */
+
+.foto-circular {
+    max-width: 600px;
+    max-height: 700px;
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    position: relative;
+    /* animation: fotoAnimacao 2.1s infinite alternate-reverse linear; */
+}
+
+.apresentacao__nome {
+    font-size: 3rem;
+    padding-bottom: 10px;
+    font-weight: 900;
+}
+
+.apresentacao__descricao {
+    font-size: 1.5rem;
+}
+
+.links {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 2rem;
+}
+
+.github__link___img,
+.linkedin__link___img {
+    width: 86px;
+    transition: all 0.3s;
+}
+
+@media (max-width: 920px) {
+
+    .apresentacao__nome {
+      font-size: 36px;
+    }
+    .apresentacao__descricao {
+      font-size: 20px;
+    }
+        /* .foto-circular {
+      width: 200px;
+      height: 200px;
+    } */
+}
+
+@media (max-width: 560px) {
+    .github__link___img,
+    .linkedin__link___img {
+    width: 50px;
+    transition: all 0.3s;
+    }
+}
