@@ -8,6 +8,11 @@
 
 .separador-apresentacao {
     color: #F7F3E3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
 
@@ -28,7 +33,7 @@
     width: 100%;
     height: auto;
     border-radius: 50%;
-    position: relative;
+
     /* animation: fotoAnimacao 2.1s infinite alternate-reverse linear; */
 }
 
@@ -45,6 +50,7 @@
 .links {
     display: flex;
     justify-content: space-around;
+    gap: 20px;
     padding-top: 2rem;
 }
 
@@ -54,7 +60,13 @@
     transition: all 0.3s;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 700px) {
+
+    #inicio {
+        flex-direction: column-reverse;
+        justify-content: center;
+        align-items: center;
+    }
 
     .apresentacao__nome {
       font-size: 36px;
@@ -62,10 +74,11 @@
     .apresentacao__descricao {
       font-size: 20px;
     }
-        /* .foto-circular {
-      width: 200px;
-      height: 200px;
-    } */
+     .foto-circular {
+      width: 60%;
+      height: auto;
+      margin-left: 6rem;
+    } 
 }
 
 @media (max-width: 560px) {

@@ -20,6 +20,7 @@
     margin-bottom: 1rem;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
 }
 
 .lista-projetos-item {
@@ -107,4 +108,14 @@
 
 #ver-mais-button:active {
     font-weight: bold;
+}
+
+@media screen and (max-width: 480px) {
+
+
+    .lista-projetos-item-link-figure {
+        width: 300px;
+        height: 200px;
+        transition: ease-in-out 0.3s;
+    }
 }

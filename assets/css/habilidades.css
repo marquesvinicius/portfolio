@@ -90,3 +90,9 @@
         margin-bottom: 2rem;
     }
 } 
+
+@media (max-width: 516px) {
+    #habilidades {
+        height: 100vh;
+    }
+}
