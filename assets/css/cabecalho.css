@@ -46,7 +46,7 @@
     font-weight: bold;
 }
 
-@media (max-width: 920px) {
+@media screen and (max-width: 920px){
 
     .menu {
         flex-grow: 1;
