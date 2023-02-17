@@ -113,10 +113,14 @@
 
 @media screen and (max-width: 480px) {
 
+    .lista-projetos-item {
+        max-width: 300px;
+    }
 
     .lista-projetos-item-link-figure {
         width: 300px;
         height: 200px;
         transition: ease-in-out 0.3s;
+        
     }
 }
