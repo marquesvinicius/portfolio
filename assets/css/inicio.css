@@ -28,8 +28,8 @@
 } */
 
 .foto-circular {
-    max-width: 600px;
-    max-height: 700px;
+    max-width: 1280px;
+    max-height: 900px;
     width: 100%;
     height: auto;
     border-radius: 50%;
@@ -60,12 +60,21 @@
     transition: all 0.3s;
 }
 
+.github__link___img:hover,
+.linkedin__link___img:hover {
+    scale: 1.1;
+}
+
 @media screen and (max-width: 700px) {
 
     #inicio {
         flex-direction: column-reverse;
         justify-content: center;
         align-items: center;
+    }
+
+    .foto-circular {
+        max-width: 400px;
     }
 
     .apresentacao__nome {
