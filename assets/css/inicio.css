@@ -8,11 +8,16 @@
 
 .separador-apresentacao {
     color: #F7F3E3;
+    width: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    text-align: center;
+}
+
+.separador-imagem {
+    width: 50%;
 }
 
 
@@ -31,7 +36,6 @@
     max-width: 1280px;
     max-height: 900px;
     width: 100%;
-    height: auto;
     border-radius: 50%;
 
     /* animation: fotoAnimacao 2.1s infinite alternate-reverse linear; */
@@ -39,8 +43,9 @@
 
 .apresentacao__nome {
     font-size: 3rem;
-    padding-bottom: 10px;
+    margin-bottom: 10px;
     font-weight: 900;
+    
 }
 
 .apresentacao__descricao {
@@ -73,21 +78,12 @@
         align-items: center;
     }
 
-    .foto-circular {
-        max-width: 400px;
-    }
-
     .apresentacao__nome {
       font-size: 36px;
     }
     .apresentacao__descricao {
       font-size: 20px;
     }
-     .foto-circular {
-      width: 60%;
-      height: auto;
-      margin-left: 6rem;
-    } 
 }
 
 @media (max-width: 560px) {
