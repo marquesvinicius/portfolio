@@ -3,7 +3,15 @@
 }
 
 body {
+    background: radial-gradient( #65010B 5.04%, #232B2B 95%);
     font-family: 'Montserrat', sans-serif;
     display: flex;
     flex-direction: column;
+}
+
+.divisoria {
+    width: 15%;
+    color: #F7F3E3;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }

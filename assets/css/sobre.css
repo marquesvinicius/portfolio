@@ -1,11 +1,11 @@
 #sobre {
+    color: #F7F3E3;
     width: 100%;
     padding-top: 5rem;
     padding-bottom: 5rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #B3B6B7;
 }
 
 

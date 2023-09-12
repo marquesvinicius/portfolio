@@ -1,5 +1,4 @@
 #projetos {
-    background-color: #232B2B;
     padding-top: 5rem;
     padding-bottom: 5rem;
     display: flex;
@@ -43,6 +42,7 @@
 }
 
 .lista-projetos-item-link-figure {
+    background-color: #232B2B;
     width: 400px;
     height: 300px;
     transition: ease-in-out 0.3s;
@@ -94,7 +94,7 @@
     font-size: 20px;
     font-family: 'Montserrat', sans-serif;
     border-radius: 100px;
-    background-color: #65010B;
+    background-color: #89222c;
     border-style: none;
     cursor: pointer;
     padding-right: 20px;
