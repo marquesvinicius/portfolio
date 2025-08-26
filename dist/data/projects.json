@@ -1,0 +1,165 @@
+{
+  "projects": [
+    {
+      "id": "grid-invaders",
+      "title": "Grid Invaders",
+      "description": "Jogo desenvolvido na linguagem C, utilizando a lib Allegro.",
+      "longDescription": "Grid Invaders é um jogo de arcade inspirado no clássico Space Invaders, desenvolvido em C utilizando a biblioteca Allegro. O projeto implementa mecânicas de jogo tradicionais com gráficos 2D, sistema de pontuação e múltiplas fases de dificuldade crescente.",
+      "tech": ["C", "Allegro", "Game Development"],
+      "category": "game",
+      "status": "completed",
+      "featured": true,
+      "thumbnail": "https://picsum.photos/400/300?random=1",
+      "images": [
+        "https://picsum.photos/800/600?random=11",
+        "https://picsum.photos/800/600?random=12",
+        "https://picsum.photos/800/600?random=13"
+      ],
+      "links": {
+        "repository": "https://github.com/marquesvinicius/grid-invaders",
+        "video": "https://youtube.com/watch?v=demo"
+      },
+      "date": "2023-06",
+      "highlights": [
+        "Implementação de física de colisão",
+        "Sistema de pontuação e vidas",
+        "Múltiplas fases com dificuldade crescente",
+        "Trilha sonora e efeitos sonoros"
+      ]
+    },
+    {
+      "id": "controle-gastos",
+      "title": "Controle de Gastos",
+      "description": "Software para controle de gastos desenvolvido em Java.",
+      "longDescription": "Aplicação desktop desenvolvida em Java para gerenciamento financeiro pessoal. O sistema permite cadastro de receitas e despesas, categorização de gastos, geração de relatórios e acompanhamento de metas financeiras.",
+      "tech": ["Java", "Swing", "SQLite", "Desktop"],
+      "category": "desktop",
+      "status": "completed",
+      "featured": true,
+      "thumbnail": "https://picsum.photos/400/300?random=2",
+      "images": [
+        "https://picsum.photos/800/600?random=21",
+        "https://picsum.photos/800/600?random=22",
+        "https://picsum.photos/800/600?random=23"
+      ],
+      "links": {
+        "repository": "https://github.com/marquesvinicius/controle-gastos"
+      },
+      "date": "2023-04",
+      "highlights": [
+        "Interface intuitiva com Java Swing",
+        "Banco de dados SQLite local",
+        "Relatórios em PDF",
+        "Sistema de categorias personalizáveis"
+      ]
+    },
+    {
+      "id": "controversa-podcast",
+      "title": "Controversa Podcast",
+      "description": "Podcast sobre tecnologia, games e assuntos diversos.",
+      "longDescription": "Controversa é um podcast focado em discussões sobre tecnologia, desenvolvimento de software, games e tendências do mercado tech. Produzido e editado de forma independente, com episódios semanais e participações especiais.",
+      "tech": ["Podcast", "Conteúdo", "Edição de Áudio", "Spotify"],
+      "category": "podcast",
+      "status": "in-progress",
+      "featured": true,
+      "thumbnail": "https://picsum.photos/400/300?random=3",
+      "images": [
+        "https://picsum.photos/800/600?random=31",
+        "https://picsum.photos/800/600?random=32",
+        "https://picsum.photos/800/600?random=33"
+      ],
+      "links": {
+        "external": "https://open.spotify.com/show/controversa-podcast",
+        "demo": "https://anchor.fm/controversa"
+      },
+      "date": "2023-01",
+      "highlights": [
+        "Mais de 50 episódios publicados",
+        "Audiência crescente no Spotify",
+        "Participações de desenvolvedores renomados",
+        "Discussões sobre tendências tech"
+      ]
+    },
+    {
+      "id": "sistema-web-responsivo",
+      "title": "Sistema Web Responsivo",
+      "description": "Aplicação web moderna com design responsivo e interface intuitiva.",
+      "longDescription": "Sistema web completo desenvolvido com tecnologias modernas, featuring design responsivo, interface intuitiva e performance otimizada. Inclui sistema de autenticação, dashboard interativo e módulos de gerenciamento.",
+      "tech": ["HTML5", "CSS3", "JavaScript", "Bootstrap", "Responsive Design"],
+      "category": "web",
+      "status": "completed",
+      "featured": true,
+      "thumbnail": "https://picsum.photos/400/300?random=4",
+      "images": [
+        "https://picsum.photos/800/600?random=41",
+        "https://picsum.photos/800/600?random=42",
+        "https://picsum.photos/800/600?random=43"
+      ],
+      "links": {
+        "demo": "https://sistema-web-demo.vercel.app",
+        "repository": "https://github.com/marquesvinicius/sistema-web"
+      },
+      "date": "2023-08",
+      "highlights": [
+        "Design 100% responsivo",
+        "Performance otimizada",
+        "Acessibilidade (WCAG 2.1)",
+        "Cross-browser compatibility"
+      ]
+    },
+    {
+      "id": "api-nodejs",
+      "title": "API REST com Node.js",
+      "description": "API robusta para gerenciamento de dados com autenticação JWT.",
+      "longDescription": "API RESTful desenvolvida em Node.js com Express, implementando padrões de segurança modernos, autenticação JWT, validação de dados e documentação completa. Integrada com PostgreSQL e deploy automatizado.",
+      "tech": ["Node.js", "Express", "PostgreSQL", "JWT", "API REST"],
+      "category": "api",
+      "status": "completed",
+      "featured": true,
+      "thumbnail": "https://picsum.photos/400/300?random=5",
+      "images": [
+        "https://picsum.photos/800/600?random=51",
+        "https://picsum.photos/800/600?random=52",
+        "https://picsum.photos/800/600?random=53"
+      ],
+      "links": {
+        "repository": "https://github.com/marquesvinicius/api-nodejs",
+        "demo": "https://api-nodejs-docs.herokuapp.com"
+      },
+      "date": "2023-09",
+      "highlights": [
+        "Autenticação JWT segura",
+        "Documentação Swagger/OpenAPI",
+        "Testes automatizados com Jest",
+        "Deploy CI/CD com GitHub Actions"
+      ]
+    },
+    {
+      "id": "dashboard-analytics",
+      "title": "Dashboard Analytics",
+      "description": "Dashboard interativo para visualização de dados e métricas.",
+      "longDescription": "Dashboard moderno para visualização de dados em tempo real, desenvolvido em React com integração de múltiplas APIs. Inclui gráficos interativos, filtros avançados e exportação de relatórios.",
+      "tech": ["React", "TypeScript", "Chart.js", "Bootstrap", "API Integration"],
+      "category": "web",
+      "status": "completed",
+      "featured": true,
+      "thumbnail": "https://picsum.photos/400/300?random=6",
+      "images": [
+        "https://picsum.photos/800/600?random=61",
+        "https://picsum.photos/800/600?random=62",
+        "https://picsum.photos/800/600?random=63"
+      ],
+      "links": {
+        "demo": "https://dashboard-analytics-demo.netlify.app",
+        "repository": "https://github.com/marquesvinicius/dashboard-analytics"
+      },
+      "date": "2023-10",
+      "highlights": [
+        "Gráficos interativos com Chart.js",
+        "Filtros dinâmicos e busca avançada",
+        "Exportação de dados em PDF/Excel",
+        "Atualização de dados em tempo real"
+      ]
+    }
+  ]
+}
