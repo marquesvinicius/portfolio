@@ -1,152 +1,129 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { X, ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { urlFor } from "@/lib/sanity";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { getLenis } from "./SmoothScroll";
+
+interface LightboxProps {
+  images: SanityImageSource[];
+  index: number;
+  title: string;
+  onChange: (index: number | null) => void;
+}
+
+/** Visualizador em tela cheia: setas ← → navegam, ESC ou clique fora fecha. */
+export function Lightbox({ images, index, title, onChange }: LightboxProps) {
+  const prev = () => index > 0 && onChange(index - 1);
+  const next = () => index < images.length - 1 && onChange(index + 1);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onChange(null);
+      if (e.key === "ArrowLeft" && index > 0) onChange(index - 1);
+      if (e.key === "ArrowRight" && index < images.length - 1) onChange(index + 1);
+    };
+    window.addEventListener("keydown", onKey);
+    getLenis()?.stop();
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      getLenis()?.start();
+    };
+  }, [index, images.length, onChange]);
+
+  const iconBtn =
+    "absolute z-10 grid h-11 w-11 place-items-center rounded-full border border-[var(--line)] bg-[oklch(0.13_0.008_195/.6)] text-paper transition-colors hover:bg-[oklch(1_0_0/.1)]";
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-[oklch(0.08_0.004_195/.92)] p-4 backdrop-blur-md"
+      onClick={() => onChange(null)}
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${title} — imagem ${index + 1} de ${images.length}`}
+    >
+      <button className={`${iconBtn} right-4 top-4`} onClick={() => onChange(null)} aria-label="Fechar">
+        <X className="h-5 w-5" />
+      </button>
+      {index > 0 && (
+        <button
+          className={`${iconBtn} left-4 top-1/2 -translate-y-1/2`}
+          onClick={(e) => {
+            e.stopPropagation();
+            prev();
+          }}
+          aria-label="Imagem anterior"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+      )}
+      {index < images.length - 1 && (
+        <button
+          className={`${iconBtn} right-4 top-1/2 -translate-y-1/2`}
+          onClick={(e) => {
+            e.stopPropagation();
+            next();
+          }}
+          aria-label="Próxima imagem"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      )}
+
+      <div className="relative flex max-h-[86vh] max-w-[90vw] items-center justify-center" onClick={(e) => e.stopPropagation()}>
+        <Image
+          src={urlFor(images[index]).width(1600).url()}
+          alt={`${title} — imagem ${index + 1}`}
+          width={1600}
+          height={1000}
+          className="max-h-[86vh] w-auto rounded-xl border border-[var(--hairline)] object-contain"
+        />
+      </div>
+
+      {images.length > 1 && (
+        <span className="absolute bottom-5 left-1/2 -translate-x-1/2 font-pixel text-xs text-muted-foreground">
+          {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+        </span>
+      )}
+    </div>
+  );
+}
 
 interface ImageGalleryProps {
-  images: any[];
+  images: SanityImageSource[];
   projectTitle: string;
 }
 
 export default function ImageGallery({ images, projectTitle }: ImageGalleryProps) {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
-
-  const openImage = (index: number) => {
-    setSelectedImage(index);
-  };
-
-  const closeImage = () => {
-    setSelectedImage(null);
-  };
-
-  const nextImage = () => {
-    if (selectedImage !== null && selectedImage < images.length - 1) {
-      setSelectedImage(selectedImage + 1);
-    }
-  };
-
-  const prevImage = () => {
-    if (selectedImage !== null && selectedImage > 0) {
-      setSelectedImage(selectedImage - 1);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape') closeImage();
-    if (e.key === 'ArrowRight') nextImage();
-    if (e.key === 'ArrowLeft') prevImage();
-  };
+  const [selected, setSelected] = useState<number | null>(null);
 
   return (
     <>
-      {/* Grid de imagens */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {images.map((image, index) => (
-          <Card 
-            key={index} 
-            className="gradient-card border-secondary overflow-hidden group cursor-pointer"
-            onClick={() => openImage(index)}
+          <button
+            key={index}
+            onClick={() => setSelected(index)}
+            className="group relative aspect-video overflow-hidden rounded-xl border border-[var(--hairline)] bg-card"
+            aria-label={`Ampliar imagem ${index + 1}`}
           >
-            <CardContent className="p-0 relative">
-              <div className="aspect-video relative">
-                <Image
-                  src={urlFor(image).width(600).height(338).url()}
-                  alt={`${projectTitle} - Imagem ${index + 1}`}
-                  width={600}
-                  height={338}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                {/* Overlay de zoom */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
-                    <ZoomIn className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+            <Image
+              src={urlFor(image).width(720).height(405).url()}
+              alt={`${projectTitle} — imagem ${index + 1}`}
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <span className="absolute inset-0 bg-gradient-to-t from-[oklch(0.1_0.004_195/.6)] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          </button>
         ))}
       </div>
 
-      {/* Modal de imagem expandida */}
-      {selectedImage !== null && (
-        <div 
-          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
-          onClick={closeImage}
-          onKeyDown={handleKeyDown}
-          tabIndex={0}
-        >
-          {/* Botão de fechar */}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-4 right-4 text-white hover:bg-white/20 z-60"
-            onClick={closeImage}
-          >
-            <X className="w-6 h-6" />
-          </Button>
-
-          {/* Navegação anterior */}
-          {selectedImage > 0 && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/20 z-60"
-              onClick={(e) => {
-                e.stopPropagation();
-                prevImage();
-              }}
-            >
-              <ChevronLeft className="w-8 h-8" />
-            </Button>
-          )}
-
-          {/* Navegação próxima */}
-          {selectedImage < images.length - 1 && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white hover:bg-white/20 z-60"
-              onClick={(e) => {
-                e.stopPropagation();
-                nextImage();
-              }}
-            >
-              <ChevronRight className="w-8 h-8" />
-            </Button>
-          )}
-
-          {/* Imagem principal */}
-          <div 
-            className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={urlFor(images[selectedImage]).width(1200).height(800).url()}
-              alt={`${projectTitle} - Imagem ${selectedImage + 1}`}
-              width={1200}
-              height={800}
-              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-            />
-          </div>
-
-          {/* Contador de imagens */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/50 text-white px-4 py-2 rounded-full text-sm">
-            {selectedImage + 1} de {images.length}
-          </div>
-
-          {/* Indicação de navegação */}
-          <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-white/70 text-xs text-center">
-            Use as setas ← → ou clique nos botões para navegar • ESC para fechar
-          </div>
-        </div>
+      {selected !== null && (
+        <Lightbox images={images} index={selected} title={projectTitle} onChange={setSelected} />
       )}
     </>
   );
 }
-
-

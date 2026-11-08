@@ -1,5 +1,7 @@
 import { createClient } from 'next-sanity'
 import imageUrlBuilder from '@sanity/image-url'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { PortableTextBlock } from '@portabletext/types'
 import { projectId, dataset, apiVersion } from '@/sanity/env'
 
 // Cliente público para ler dados
@@ -22,7 +24,7 @@ export const writeClient = createClient({
 // Builder para URLs de imagens
 const builder = imageUrlBuilder(client)
 
-export function urlFor(source: any) {
+export function urlFor(source: SanityImageSource) {
   return builder.image(source)
 }
 
@@ -38,8 +40,8 @@ export interface SanityProject {
   category: 'web' | 'mobile' | 'desktop' | 'game' | 'api' | 'podcast' | 'other'
   status: 'completed' | 'in-progress' | 'archived'
   featured: boolean
-  thumbnail?: any // Sanity image
-  gallery?: any[] // Array de Sanity images
+  thumbnail?: SanityImageSource
+  gallery?: SanityImageSource[]
   links?: {
     demo?: string
     repository?: string
@@ -56,14 +58,14 @@ export interface SanityPost {
   title: string
   slug: { current: string }
   excerpt?: string
-  body: any[] // Portable Text
-  coverImage?: any // Sanity image
+  body: PortableTextBlock[]
+  coverImage?: SanityImageSource
   publishedAt: string
   categories?: string[]
   tags?: string[]
   author?: {
     name: string
-    image?: any
+    image?: SanityImageSource
   }
 }
 
@@ -95,6 +97,7 @@ export const featuredProjectsQuery = `*[_type == "project" && featured == true] 
   status,
   featured,
   thumbnail,
+  gallery,
   publishedAt
 }`
 

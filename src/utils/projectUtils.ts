@@ -70,9 +70,9 @@ export const createProject = (
     category,
     status,
     featured,
-    images: customImages || {
-      thumbnail: generateProjectImage(title),
-      gallery: [
+    images: {
+      thumbnail: customImages?.thumbnail ?? generateProjectImage(title),
+      gallery: customImages?.gallery ?? [
         generateProjectImage(`${title} - Screenshot 1`, 800, 600),
         generateProjectImage(`${title} - Screenshot 2`, 800, 600),
         generateProjectImage(`${title} - Screenshot 3`, 800, 600)

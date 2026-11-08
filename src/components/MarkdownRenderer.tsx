@@ -1,7 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
-import 'highlight.js/styles/github-dark.css';
+import 'highlight.js/styles/atom-one-dark.css';
 
 interface MarkdownRendererProps {
   content: string;
@@ -16,17 +16,17 @@ export default function MarkdownRenderer({ content, className = "" }: MarkdownRe
         rehypePlugins={[rehypeHighlight]}
         components={{
           h1: ({ children }) => (
-            <h1 className="text-2xl font-bold text-foreground mb-4 mt-6 first:mt-0">
+            <h1 className="font-serif text-3xl tracking-tight text-foreground mb-4 mt-8 first:mt-0">
               {children}
             </h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-xl font-semibold text-foreground mb-3 mt-5">
+            <h2 className="font-serif text-2xl tracking-tight text-foreground mb-3 mt-8">
               {children}
             </h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-lg font-medium text-foreground mb-2 mt-4">
+            <h3 className="font-serif text-xl tracking-tight text-foreground mb-2 mt-6">
               {children}
             </h3>
           ),
@@ -55,18 +55,19 @@ export default function MarkdownRenderer({ content, className = "" }: MarkdownRe
               {children}
             </blockquote>
           ),
-          code: ({ inline, children }) => 
-            inline ? (
-              <code className="bg-secondary/80 text-foreground px-1.5 py-0.5 rounded text-sm font-mono">
+          // react-markdown 10 não passa mais `inline`: bloco = tem linguagem ou quebra de linha
+          code: ({ className, children }) =>
+            !/language-/.test(className ?? "") && !String(children).includes("\n") ? (
+              <code className="bg-muted text-foreground px-2 py-0.5 rounded text-sm font-mono border border-border/20">
                 {children}
               </code>
             ) : (
-              <code className="block bg-secondary/80 text-foreground p-4 rounded-lg text-sm font-mono overflow-x-auto">
+              <code className="block bg-card text-foreground p-4 rounded-lg text-sm font-mono overflow-x-auto border border-border/30 shadow-sm">
                 {children}
               </code>
             ),
           pre: ({ children }) => (
-            <pre className="bg-secondary/80 text-foreground p-4 rounded-lg text-sm font-mono overflow-x-auto mb-4">
+            <pre className="bg-card text-foreground p-4 rounded-lg text-sm font-mono overflow-x-auto mb-4 border border-border/30 shadow-sm">
               {children}
             </pre>
           ),
@@ -97,5 +98,6 @@ export default function MarkdownRenderer({ content, className = "" }: MarkdownRe
     </div>
   );
 }
+
 
 

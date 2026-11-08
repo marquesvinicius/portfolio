@@ -1,44 +1,60 @@
 import Link from "next/link";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { contact, navigation } from "@/lib/site";
+import MeshGradient from "./aurora/MeshGradient";
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear();
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-black border-t border-gray-800">
-      <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
-        <div className="flex justify-center space-x-6 md:order-2">
-          <Link
-            href="https://github.com/marquesvinicius"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-red-400 transition-colors"
-          >
-            <span className="sr-only">GitHub</span>
-            <Github className="h-6 w-6" />
-          </Link>
-          <Link
-            href="https://linkedin.com/in/marques-vinicius"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-gray-400 hover:text-red-400 transition-colors"
-          >
-            <span className="sr-only">LinkedIn</span>
-            <Linkedin className="h-6 w-6" />
-          </Link>
-          <Link
-            href="mailto:marquesviniciusmelomartins@gmail.com"
-            className="text-gray-400 hover:text-red-400 transition-colors"
-          >
-            <span className="sr-only">Email</span>
-            <Mail className="h-6 w-6" />
+    <footer className="relative overflow-hidden border-t border-[var(--line)]">
+      {/* a mesma luz da Hero, baixa e subindo da borda: fecha a página como a Hero abre */}
+      <MeshGradient intensity={0.65} scale={0.8} className="footer-glow" />
+      <div className="wrap relative z-[1] grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
+        <div>
+          <p className="display text-[clamp(32px,4vw,52px)]">Vamos construir algo?</p>
+          <Link href="/contato" className="btn btn-light mt-6">
+            Fale comigo <span aria-hidden="true">→</span>
           </Link>
         </div>
-        <div className="mt-8 md:order-1 md:mt-0">
-          <p className="text-center text-xs leading-5 text-gray-400">
-            &copy; {currentYear} Marques Vinícius. Todos os direitos reservados.
-          </p>
+
+        <div>
+          <span className="kicker">Navegação</span>
+          <ul className="grid gap-2 text-sm text-muted-foreground">
+            {[...navigation, { name: "Contato", href: "/contato" }].map((item) => (
+              <li key={item.href}>
+                <Link href={item.href} className="transition-colors hover:text-paper">
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
+
+        <div>
+          <span className="kicker">Contato</span>
+          <ul className="grid gap-2 text-sm text-muted-foreground">
+            <li>
+              <a href={`mailto:${contact.email}`} className="break-all transition-colors hover:text-paper">
+                {contact.email}
+              </a>
+            </li>
+            <li>
+              <a href={contact.github} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-paper">
+                GitHub ↗
+              </a>
+            </li>
+            <li>
+              <a href={contact.linkedin} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-paper">
+                LinkedIn ↗
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="wrap relative z-[1] flex flex-wrap justify-between gap-4 border-t border-[var(--hairline)] py-6 text-xs text-muted-foreground">
+        <span>© {year} Marques Vinícius</span>
+        <span className="font-pixel">Feito com Next.js · BR</span>
       </div>
     </footer>
   );

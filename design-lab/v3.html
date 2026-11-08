@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurora Lab</title>
+<style>
+  /* Geist Sans / Serif / Pixel — mesmos arquivos do pacote npm `geist` (no Next: geist/font/*) */
+  @font-face { font-family: "Geist"; src: url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-sans/Geist-Variable.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: "Geist Serif"; src: url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-serif/GeistSerifVF.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  @font-face { font-family: "Geist Pixel"; src: url("https://cdn.jsdelivr.net/npm/geist@1.9.2/dist/fonts/geist-pixel/GeistPixel-Square.woff2") format("woff2"); font-display: swap; }
+
+  /* ---------------------------------------------------------------
+     Tokens — paleta original reinterpretada em OKLCH
+     #8D010F bordô · #232B2B grafite · #B3B6B7 cinza · #F7F3E3 off-white
+     --------------------------------------------------------------- */
+  :root {
+    --ink:        oklch(0.13 0.008 195);
+    --graphite:   oklch(0.28 0.012 195);
+    --steel:      oklch(0.76 0.005 220);
+    --paper:      oklch(0.96 0.025 95);
+    --bordo:      oklch(0.38 0.15 25);
+    --crimson:    oklch(0.55 0.22 25);
+    --ember:      oklch(0.68 0.20 22);
+    --line:       oklch(1 0 0 / 0.10);
+    --muted:      oklch(0.72 0.005 220);
+    --surface:    oklch(0.98 0.004 95);
+    --surface-ink:oklch(0.18 0.008 195);
+    --radius: 18px;
+    --ease: cubic-bezier(.2, .7, .1, 1);
+    --serif: "Geist Serif", Georgia, serif;
+    --sans: "Geist", system-ui, sans-serif;
+    --pixel: "Geist Pixel", ui-monospace, monospace;
+    --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  * { box-sizing: border-box; margin: 0; }
+  html { color-scheme: dark; }
+  body {
+    background: var(--ink); color: var(--paper);
+    font-family: var(--sans); -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  body.locked { overflow: hidden; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { width: min(1280px, 100% - 32px); margin-inline: auto; }
+
+  /* ---------------- Mesh fallback em CSS (sem WebGL / capas de card) ---------------- */
+  .aurora { position: absolute; inset: 0; overflow: hidden; background: var(--ink); isolation: isolate; }
+  .aurora .blob { position: absolute; border-radius: 50%; filter: blur(60px) saturate(1.25); mix-blend-mode: screen; will-change: transform; }
+  .b1 { width: 62%; aspect-ratio: 1; left: 38%; top: -18%; background: radial-gradient(circle in oklch, var(--crimson), transparent 68%); animation: drift1 26s ease-in-out infinite alternate; }
+  .b2 { width: 48%; aspect-ratio: 1; left: -10%; top: 30%; background: radial-gradient(circle in oklch, var(--bordo), transparent 70%); animation: drift2 32s ease-in-out infinite alternate; }
+  .b3 { width: 34%; aspect-ratio: 1; left: 52%; top: 38%; background: radial-gradient(circle in oklch, var(--ember), transparent 66%); opacity: .75; animation: drift3 22s ease-in-out infinite alternate; }
+  .b4 { width: 40%; aspect-ratio: 1; left: 18%; top: -20%; background: radial-gradient(circle in oklch, oklch(0.55 0.01 220), transparent 70%); opacity: .55; animation: drift2 38s ease-in-out infinite alternate-reverse; }
+  .b5 { width: 18%; aspect-ratio: 1; left: 60%; top: 22%; background: radial-gradient(circle, var(--paper), transparent 65%); opacity: .5; animation: drift3 18s ease-in-out infinite alternate-reverse; }
+  .aurora .dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, oklch(1 0 0 / .9) 0 1px, transparent 1.4px);
+    background-size: 7px 7px; mix-blend-mode: overlay; opacity: .5;
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 55% 45%, #000, transparent 75%);
+            mask-image: radial-gradient(ellipse 50% 50% at 55% 45%, #000, transparent 75%);
+  }
+  .aurora .grain { position: absolute; inset: -50%; background-image: var(--grain); opacity: .16; mix-blend-mode: overlay; animation: grain 1.2s steps(6) infinite; }
+  @keyframes drift1 { to { transform: translate(-14%, 12%) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(18%, -10%) scale(.9); } }
+  @keyframes drift3 { to { transform: translate(-20%, -16%) scale(1.25); } }
+  @keyframes grain  { 0%{transform:translate(0,0)} 20%{transform:translate(-3%,2%)} 40%{transform:translate(2%,-4%)} 60%{transform:translate(-4%,-1%)} 80%{transform:translate(3%,3%)} }
+
+  /* ---------------- Glass ---------------- */
+  .glass {
+    background: oklch(1 0 0 / .06);
+    border: 1px solid oklch(1 0 0 / .18);
+    backdrop-filter: blur(14px) saturate(1.4);
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / .14), 0 10px 30px oklch(0 0 0 / .25);
+  }
+
+  /* ---------------- Nav: sem logo, destaque deslizante, some ao descer ---------------- */
+  .nav {
+    position: fixed; inset: 0 0 auto; z-index: 30;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    padding: 18px clamp(16px, 3vw, 40px);
+    transition: transform .6s var(--ease), background .4s, padding .4s var(--ease), border-color .4s;
+    border-bottom: 1px solid transparent;
+    animation: navIn 1s .3s var(--ease) backwards;
+  }
+  @keyframes navIn { from { opacity: 0; transform: translateY(-12px); } }
+  .nav.scrolled { background: oklch(0.13 0.008 195 / .6); backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4); padding-block: 10px; border-color: var(--line); }
+  .nav.hidden { transform: translateY(-100%); }
+  .who { justify-self: start; display: inline-flex; align-items: baseline; gap: 10px; font-size: 14px; font-weight: 500; letter-spacing: -.01em; }
+  .who small { font-size: 13px; font-weight: 400; color: var(--muted); }
+  @media (max-width: 1100px) { .who small { display: none; } }
+  .links { position: relative; display: flex; gap: 2px; }
+  .links a { position: relative; z-index: 1; font-size: 14px; padding: 8px 16px; color: oklch(0.86 0.01 95 / .8); transition: color .3s; }
+  .links a.on, .links a:hover { color: #fff; }
+  .links .hl {
+    position: absolute; z-index: 0; top: 0; left: 0; height: 100%; border-radius: 999px;
+    background: oklch(1 0 0 / .08); box-shadow: inset 0 1px 0 oklch(1 0 0 / .08);
+    transition: transform .5s var(--ease), width .5s var(--ease);
+  }
+  .links a.on::after { content: ""; position: absolute; left: 50%; bottom: 1px; width: 3px; height: 3px; border-radius: 50%; background: var(--ember); translate: -50% 0; }
+  .nav-right { justify-self: end; display: flex; align-items: center; gap: 20px; }
+  .nav-right .clock { font-family: var(--pixel); font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+  .nav-cta { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 500; transition: background .3s; }
+  .nav-cta span { display: inline-block; transition: transform .4s var(--ease); }
+  .nav-cta:hover { background: #fff; }
+  .nav-cta:hover span { transform: rotate(45deg); }
+  .menu-btn { display: none; justify-self: end; background: none; border: 1px solid var(--line); color: var(--paper); font: 500 13px var(--sans); padding: 9px 16px; border-radius: 999px; cursor: pointer; }
+  @media (max-width: 900px) {
+    .nav { grid-template-columns: 1fr auto; }
+    .links, .nav-right { display: none; }
+    .menu-btn { display: inline-block; }
+  }
+  .sheet {
+    position: fixed; inset: 0; z-index: 25; background: oklch(0.13 0.008 195 / .9);
+    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+    display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 32px;
+    clip-path: circle(0 at calc(100% - 50px) 40px); transition: clip-path .7s var(--ease);
+  }
+  .sheet.open { clip-path: circle(150% at calc(100% - 50px) 40px); }
+  .sheet a { font-family: var(--serif); font-size: clamp(40px, 12vw, 72px); letter-spacing: -.03em; line-height: 1.05; display: flex; align-items: baseline; gap: 12px; }
+  .sheet a sup { font-family: var(--pixel); font-size: 12px; color: var(--muted); }
+
+  /* ---------------- Hero ---------------- */
+  .hero { position: relative; height: 100svh; min-height: 680px; overflow: hidden; }
+  #mesh, .hero > .aurora { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .hero > .aurora { display: none; }
+  .no-webgl #mesh { display: none; }
+  .no-webgl .hero > .aurora { display: block; }
+
+  /* anel + chips de vidro orbitando devagar */
+  .ring {
+    position: absolute; z-index: 1; left: 50%; top: 50%; translate: -50% -50%;
+    width: min(78svh, 92vw, 760px); aspect-ratio: 1; border-radius: 50%;
+    border: 1px solid oklch(1 0 0 / .16);
+    animation: fadeRing 2s .4s var(--ease) backwards;
+  }
+  @keyframes fadeRing { from { opacity: 0; scale: .92; } }
+  .orbit { position: absolute; z-index: 1; left: 50%; top: 50%; width: 0; height: 0; animation: spin 120s linear infinite; }
+  .orbit .chip {
+    --r: calc(min(78svh, 92vw, 760px) / 2);
+    position: absolute; left: 0; top: 0;
+    transform: rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))) translate(-50%, -50%);
+  }
+  .orbit .chip > span {
+    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+    padding: 10px 18px; border-radius: 999px; font-size: 14px;
+    animation: spin 120s linear infinite reverse;
+  }
+  .orbit .chip svg { width: 15px; height: 15px; opacity: .85; }
+  @keyframes spin { to { rotate: 360deg; } }
+  @media (max-width: 760px) { .orbit { display: none; } }
+
+  .hero-center {
+    position: absolute; inset: 0; z-index: 2;
+    display: grid; place-content: center; justify-items: center; text-align: center; gap: 26px; padding: 0 16px;
+  }
+  .eyebrow { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: oklch(0.92 0.01 95 / .8); opacity: 0; animation: fade 1.2s .2s var(--ease) forwards; }
+  .hero h1 {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(44px, 7.4vw, 124px); line-height: .98; letter-spacing: -.045em;
+    text-shadow: 0 2px 40px oklch(0.13 0.008 195 / .35);
+  }
+  .hero h1 .w { display: block; overflow: hidden; padding-bottom: .1em; }
+  .hero h1 .w > span { display: inline-block; transform: translateY(105%); animation: rise 1.3s var(--ease) forwards; }
+  .hero h1 .w:nth-child(2) > span { animation-delay: .14s; }
+  .hero .lede {
+    max-width: 46ch; font-size: clamp(15px, 1.3vw, 18px); line-height: 1.55; color: oklch(0.92 0.012 95 / .88);
+    opacity: 0; animation: fade 1.2s .6s var(--ease) forwards;
+  }
+  .cta { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; opacity: 0; animation: fade 1.2s .8s var(--ease) forwards; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 13px 22px; border-radius: 999px; font: 500 14px var(--sans); transition: gap .3s var(--ease), background .3s; }
+  .btn-light { background: var(--paper); color: var(--ink); }
+  .btn-light:hover { background: #fff; gap: 14px; }
+  .btn-glass:hover { background: oklch(1 0 0 / .12); }
+  @keyframes rise { to { transform: none; } }
+  @keyframes fade { to { opacity: 1; } }
+
+  .hero-foot {
+    position: absolute; z-index: 3; inset: auto 0 0; padding: 0 clamp(16px, 3vw, 40px) 26px;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: end; gap: 16px;
+    font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: oklch(0.92 0.01 95 / .7);
+    opacity: 0; animation: fade 1.2s 1.1s var(--ease) forwards;
+  }
+  .hero-foot > :last-child { justify-self: end; text-align: right; }
+  .featured { display: grid; gap: 6px; }
+  .featured b { font-family: var(--pixel); font-weight: 400; color: var(--ember); letter-spacing: .04em; }
+  .featured nav { display: flex; gap: 6px 14px; flex-wrap: wrap; text-transform: none; letter-spacing: 0; font-size: 14px; }
+  .featured nav a { color: oklch(0.92 0.01 95 / .85); transition: color .3s; }
+  .featured nav a:hover { color: #fff; }
+  .scroll-cue { display: grid; justify-items: center; gap: 10px; }
+  .scroll-cue .bar { width: 1px; height: 46px; background: oklch(1 0 0 / .2); position: relative; overflow: hidden; }
+  .scroll-cue .bar::after { content: ""; position: absolute; inset: 0; background: var(--paper); transform: translateY(-100%); animation: cue 2.2s var(--ease) infinite; }
+  @keyframes cue { 50% { transform: none; } 100% { transform: translateY(100%); } }
+  @media (max-width: 760px) { .hero-foot { grid-template-columns: 1fr; } .scroll-cue, .hero-foot > :last-child { display: none; } }
+
+  /* ---------------- Marquee de tecnologias ---------------- */
+  .marquee { border-block: 1px solid var(--line); overflow: hidden; padding: 26px 0; }
+  .marquee .track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+  .marquee:hover .track { animation-play-state: paused; }
+  .marquee span { font-family: var(--serif); font-size: clamp(28px, 4vw, 56px); letter-spacing: -.03em; padding-right: .6em; white-space: nowrap; display: inline-flex; align-items: center; gap: .6em; color: oklch(0.9 0.01 95); }
+  .marquee span::after { content: ""; width: .22em; height: .22em; border-radius: 50%; background: var(--crimson); box-shadow: 0 0 18px var(--crimson); }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  /* ---------------- Section heads ---------------- */
+  section.block { padding: 120px 0; position: relative; }
+  .head { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 48px; flex-wrap: wrap; }
+  .kicker { font-family: var(--pixel); font-size: 13px; color: var(--ember); margin-bottom: 14px; display: block; }
+  h2 { font-family: var(--serif); font-size: clamp(38px, 5.5vw, 76px); font-weight: 400; letter-spacing: -.04em; line-height: 1; }
+  .head p { color: var(--muted); max-width: 38ch; line-height: 1.5; }
+
+  /* reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(32px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------------- Case cards ---------------- */
+  .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 520px), 1fr)); gap: 24px; }
+  .case { background: var(--surface); color: var(--surface-ink); border-radius: calc(var(--radius) + 6px); padding: 22px; display: grid; gap: 16px; position: relative; transition: transform .6s var(--ease); }
+  .case:hover { transform: translateY(-6px); }
+  .case:hover .cover .aurora { transform: scale(1.06); }
+  .case .meta { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; font-size: 15px; }
+  .case .meta small { font-size: 13px; color: oklch(0.55 0.005 220); }
+  .case .meta :nth-child(even) { text-align: right; }
+  .cover { position: relative; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; display: grid; place-items: center; }
+  .cover .aurora { transition: transform 1.2s var(--ease); }
+  .cover .logo-lock { position: relative; z-index: 2; color: #fff; text-align: center; }
+  .cover .logo-lock b { display: block; font-family: var(--serif); font-weight: 400; font-size: clamp(30px, 4.4vw, 52px); letter-spacing: -.04em; line-height: 1; }
+  .cover .logo-lock small { display: block; margin-top: 10px; font-size: 9px; letter-spacing: .5em; text-transform: uppercase; opacity: .85; }
+  .strip { border-radius: 12px; padding: 18px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: oklch(0.93 0.02 25); }
+  .strip > div { aspect-ratio: 4/5; border-radius: 8px; overflow: hidden; position: relative; }
+  .strip .s-dark { background: var(--surface-ink); color: var(--paper); padding: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+  .strip .s-dark b { font-family: var(--serif); font-weight: 400; font-size: clamp(20px, 2.6vw, 30px); letter-spacing: -.03em; line-height: 1; }
+  .strip .s-dark small { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; opacity: .7; }
+  .strip .s-white { background: #fff; display: grid; place-items: center; font-size: 11px; color: oklch(0.5 0 0); border: 1px solid oklch(0 0 0 / .06); }
+  .case .view { position: absolute; right: -10px; bottom: -14px; background: #fff; color: var(--surface-ink); border-radius: 12px; padding: 12px 16px; font-size: 14px; font-weight: 500; display: flex; gap: 8px; align-items: center; box-shadow: 0 8px 24px oklch(0 0 0 / .18); transition: gap .3s var(--ease); }
+  .case .view:hover { gap: 14px; }
+  @media (max-width: 640px) { .case .view { right: 12px; } }
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag { font-size: 12px; padding: 5px 10px; border-radius: 999px; background: oklch(0.18 0.008 195 / .06); border: 1px solid oklch(0.18 0.008 195 / .1); }
+
+  /* ---------------- Posters ---------------- */
+  .posters { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; }
+  @media (max-width: 860px) { .posters { grid-template-columns: 1fr; } }
+  .poster { position: relative; border-radius: var(--radius); overflow: hidden; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; padding: 32px; }
+  .poster > *:not(.aurora) { position: relative; z-index: 2; }
+  .brand { font-size: 14px; font-weight: 500; letter-spacing: -.01em; }
+  .poster h3 { font-family: var(--serif); font-size: clamp(32px, 3.8vw, 52px); font-weight: 400; letter-spacing: -.04em; line-height: 1.02; text-align: right; }
+  .poster p { text-align: right; color: oklch(0.9 0.01 95); margin-top: 10px; }
+  .split { border-radius: var(--radius); overflow: hidden; display: grid; grid-template-rows: 1.2fr 1fr; min-height: 520px; }
+  .split .top { position: relative; }
+  .split .top .brand { position: absolute; z-index: 2; left: 24px; top: 20px; }
+  .split .top .frame { position: absolute; z-index: 2; left: 50%; top: 50%; translate: -50% -50%; width: 56px; height: 52px;
+    background:
+      linear-gradient(#fff,#fff) 0 0/14px 1.5px, linear-gradient(#fff,#fff) 0 0/1.5px 14px,
+      linear-gradient(#fff,#fff) 100% 0/14px 1.5px, linear-gradient(#fff,#fff) 100% 0/1.5px 14px,
+      linear-gradient(#fff,#fff) 0 100%/14px 1.5px, linear-gradient(#fff,#fff) 0 100%/1.5px 14px,
+      linear-gradient(#fff,#fff) 100% 100%/14px 1.5px, linear-gradient(#fff,#fff) 100% 100%/1.5px 14px;
+    background-repeat: no-repeat; }
+  .split .bottom { background: oklch(0.1 0.004 195); padding: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 20px; }
+  .split .row { display: flex; justify-content: space-between; align-items: center; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; gap: 12px; flex-wrap: wrap; }
+  .split .row .brand { font-size: 12px; text-transform: none; letter-spacing: 0; }
+  .split .bottom h4 { font-family: var(--serif); font-size: clamp(30px, 3.2vw, 44px); font-weight: 400; letter-spacing: -.04em; line-height: 1.02; }
+
+  /* ---------------- Palette ---------------- */
+  .palette { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  @media (max-width: 640px) { .palette { grid-template-columns: repeat(2, 1fr); } }
+  .swatch { display: grid; grid-template-rows: repeat(4, 56px); border-radius: 12px; overflow: hidden; }
+  .swatch div { padding: 8px 10px; font-size: 11px; display: flex; align-items: end; font-family: ui-monospace, monospace; }
+  .sw-label { margin-top: 10px; font-size: 13px; }
+  .sw-label small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+
+  footer { padding: 60px 0 80px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora .blob, .aurora .grain, .marquee .track, .scroll-cue .bar::after { animation: none; }
+    .hero h1 .w > span, .eyebrow, .lede, .cta, .hero-foot, .ring, .nav { animation-duration: .01s; animation-delay: 0s; }
+    .orbit, .orbit .chip > span { animation: none; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <a class="who" href="#">Marques Vinícius <small>Desenvolvedor full-stack</small></a>
+  <nav class="links" id="links" aria-label="Principal">
+    <span class="hl" aria-hidden="true"></span>
+    <a href="#" class="on">Início</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#projetos">Projetos</a>
+    <a href="#">Blog</a>
+  </nav>
+  <div class="nav-right">
+    <span class="clock" id="clock">--:--</span>
+    <a class="nav-cta" href="#">Contato <span aria-hidden="true">↗</span></a>
+  </div>
+  <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="sheet">Menu</button>
+</header>
+
+<div class="sheet" id="sheet">
+  <a href="#"><sup>01</sup>Início</a>
+  <a href="#sobre"><sup>02</sup>Sobre</a>
+  <a href="#projetos"><sup>03</sup>Projetos</a>
+  <a href="#"><sup>04</sup>Blog</a>
+  <a href="#"><sup>05</sup>Contato</a>
+</div>
+
+<!-- ============ HERO: impacto visual, quase sem texto ============ -->
+<section class="hero">
+  <canvas id="mesh" aria-hidden="true"></canvas>
+  <div class="aurora" aria-hidden="true">
+    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+    <div class="blob b4"></div><div class="blob b5"></div><div class="dots"></div><div class="grain"></div>
+  </div>
+
+  <div class="ring" aria-hidden="true"></div>
+  <div class="orbit" aria-hidden="true">
+    <span class="chip" style="--a:-140deg"><span class="glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M13.5 6l-3 12"/></svg>Front-end</span></span>
+    <span class="chip" style="--a:-15deg"><span class="glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h6m4 0h6M10 8v8m4-8v8"/></svg>Integrações</span></span>
+    <span class="chip" style="--a:115deg"><span class="glass"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h10M4 17h7"/></svg>APIs REST</span></span>
+  </div>
+
+  <div class="hero-center">
+    <p class="eyebrow">Desenvolvedor full-stack · Goiás, BR</p>
+    <h1><span class="w"><span>Do erro no log</span></span><span class="w"><span>à interface no ar.</span></span></h1>
+    <p class="lede">Venho do suporte técnico: logs, APIs e integrações. Hoje construo o software de ponta a ponta, sabendo exatamente onde ele costuma quebrar.</p>
+    <div class="cta">
+      <a class="btn btn-light" href="#projetos">Ver projetos <span aria-hidden="true">→</span></a>
+      <a class="btn btn-glass glass" href="#sobre">Minha história</a>
+    </div>
+  </div>
+
+  <div class="hero-foot">
+    <div class="featured">
+      <b>Em destaque</b>
+      <nav aria-label="Projetos em destaque"><a href="#projetos">PedeMais1</a><a href="#projetos">Forjador de Lendas</a><a href="#projetos">Predium</a><a href="#projetos">Grid Invaders</a></nav>
+    </div>
+    <a class="scroll-cue" href="#projetos"><span>Role</span><span class="bar"></span></a>
+    <span>04 projetos<br>selecionados ↓</span>
+  </div>
+</section>
+
+<div class="marquee" aria-label="Tecnologias">
+  <div class="track">
+    <span>JavaScript</span><span>React</span><span>Next.js</span><span>Node.js</span><span>PostgreSQL</span><span>APIs REST</span><span>Java</span><span>Supabase</span>
+    <span aria-hidden="true">JavaScript</span><span aria-hidden="true">React</span><span aria-hidden="true">Next.js</span><span aria-hidden="true">Node.js</span><span aria-hidden="true">PostgreSQL</span><span aria-hidden="true">APIs REST</span><span aria-hidden="true">Java</span><span aria-hidden="true">Supabase</span>
+  </div>
+</div>
+
+<!-- ============ PROJETOS ============ -->
+<section class="block" id="projetos">
+  <div class="wrap">
+    <div class="head reveal">
+      <div><span class="kicker">03 — Projetos</span><h2>Trabalhos selecionados</h2></div>
+      <p>Case cards no formato editorial: metadados, capa com o gradiente da marca e uma faixa de telas.</p>
+    </div>
+
+    <div class="cases">
+      <article class="case reveal">
+        <div class="meta"><span>PedeMais1</span><span>Sistema web + API</span><small>Pedidos para restaurantes</small><small>2025</small></div>
+        <div class="cover">
+          <div class="aurora" aria-hidden="true">
+            <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><div class="grain"></div>
+          </div>
+          <div class="logo-lock"><b>PedeMais1</b><small>Sistema de pedidos</small></div>
+        </div>
+        <div class="strip">
+          <div class="s-dark"><small>Stack</small><b>Node + Supabase</b></div>
+          <div class="s-white">tela de login</div>
+          <div class="s-white">painel de pedidos</div>
+        </div>
+        <div class="tags"><span class="tag">Bootstrap</span><span class="tag">JavaScript</span><span class="tag">Node.js</span><span class="tag">JWT</span><span class="tag">Vercel</span></div>
+        <a class="view" href="#">Ver estudo de caso <span aria-hidden="true">→</span></a>
+      </article>
+
+      <article class="case reveal">
+        <div class="meta"><span>Forjador de Lendas</span><span>Web app</span><small>Gerador de personagens de RPG</small><small>2025</small></div>
+        <div class="cover">
+          <div class="aurora" aria-hidden="true" style="filter:brightness(.9)">
+            <div class="blob b2"></div><div class="blob b4"></div><div class="blob b5"></div><div class="blob b1"></div><div class="grain"></div>
+          </div>
+          <div class="logo-lock"><b>Forjador de Lendas</b><small>RPG Companion</small></div>
+        </div>
+        <div class="strip">
+          <div class="s-white">ficha</div>
+          <div class="s-dark"><small>Assistente</small><b>Mago Companion</b></div>
+          <div class="s-white">atributos</div>
+        </div>
+        <div class="tags"><span class="tag">JavaScript</span><span class="tag">Bulma</span><span class="tag">Supabase</span><span class="tag">Vercel</span></div>
+        <a class="view" href="#">Ver estudo de caso <span aria-hidden="true">→</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ POSTERS ============ -->
+<section class="block" id="sobre">
+  <div class="wrap">
+    <div class="head reveal">
+      <div><span class="kicker">02 — Marca</span><h2>Linguagem visual</h2></div>
+      <p>Peças de apoio: hero de páginas internas, capas de post do blog e cards de redes sociais.</p>
+    </div>
+    <div class="posters">
+      <div class="poster reveal">
+        <div class="aurora" aria-hidden="true">
+          <div class="blob b1" style="left:20%;top:10%;width:80%"></div><div class="blob b2"></div><div class="blob b3" style="left:40%;top:30%"></div>
+          <div class="blob b5" style="left:35%;top:30%"></div><div class="dots"></div><div class="grain"></div>
+        </div>
+        <div class="brand">Marques Vinícius</div>
+        <div><h3>Do requisito<br>à entrega.</h3><p>Código limpo, interfaces acessíveis, integrações que funcionam.</p></div>
+      </div>
+      <div class="split reveal">
+        <div class="top">
+          <div class="aurora" aria-hidden="true">
+            <div class="blob b2" style="left:0;top:0;width:70%"></div><div class="blob b1" style="left:40%;top:20%"></div>
+            <div class="blob b4" style="left:50%;top:-10%"></div><div class="blob b5" style="left:20%;top:30%;width:40%"></div>
+            <div class="dots" style="mask-image:none;-webkit-mask-image:none;opacity:.35"></div><div class="grain"></div>
+          </div>
+          <span class="brand">Marques Vinícius</span><span class="frame" aria-hidden="true"></span>
+        </div>
+        <div class="bottom">
+          <div class="row"><span class="brand">Marques Vinícius</span><span>Front / Back / Integrações</span></div>
+          <h4>Interfaces para<br>times modernos.</h4>
+          <div class="row"><span>Build / Integrate / Ship</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PALETA ============ -->
+<section class="block">
+  <div class="wrap">
+    <div class="head reveal">
+      <div><span class="kicker">Sistema</span><h2>Tints &amp; shades</h2></div>
+      <p>A paleta original convertida para OKLCH. O bordô ganha versões "acesas" que só existem dentro da luz.</p>
+    </div>
+    <div class="palette reveal">
+      <div>
+        <div class="swatch">
+          <div style="background:oklch(0.20 0.08 25)">0.20</div><div style="background:var(--bordo)">#8D010F</div>
+          <div style="background:var(--crimson)">crimson</div><div style="background:var(--ember);color:var(--ink)">ember</div>
+        </div>
+        <div class="sw-label">Bordô<small>marca / luz</small></div>
+      </div>
+      <div>
+        <div class="swatch">
+          <div style="background:var(--ink)">ink</div><div style="background:oklch(0.20 0.01 195)">0.20</div>
+          <div style="background:var(--graphite)">#232B2B</div><div style="background:oklch(0.38 0.012 195)">0.38</div>
+        </div>
+        <div class="sw-label">Grafite<small>fundos / superfícies</small></div>
+      </div>
+      <div>
+        <div class="swatch">
+          <div style="background:oklch(0.5 0.005 220)">0.50</div><div style="background:oklch(0.62 0.005 220)">0.62</div>
+          <div style="background:var(--steel);color:var(--ink)">#B3B6B7</div><div style="background:oklch(0.86 0.004 220);color:var(--ink)">0.86</div>
+        </div>
+        <div class="sw-label">Aço<small>texto secundário / bordas</small></div>
+      </div>
+      <div>
+        <div class="swatch">
+          <div style="background:oklch(0.86 0.03 95);color:var(--ink)">0.86</div><div style="background:oklch(0.92 0.03 95);color:var(--ink)">0.92</div>
+          <div style="background:var(--paper);color:var(--ink)">#F7F3E3</div><div style="background:#fff;color:var(--ink)">white</div>
+        </div>
+        <div class="sw-label">Papel<small>texto / cards claros</small></div>
+      </div>
+      <div>
+        <div class="swatch" style="grid-template-rows:224px">
+          <div style="position:relative;padding:0;overflow:hidden">
+            <div class="aurora"><div class="blob b1" style="width:120%;left:0"></div><div class="blob b2" style="width:110%"></div><div class="blob b3" style="width:80%"></div><div class="grain"></div></div>
+          </div>
+        </div>
+        <div class="sw-label">Mesh<small>heros e capas</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap"><span>Aurora Lab — protótipo de direção visual</span><span>branch feat/aurora-redesign</span></div></footer>
+
+<script>
+/* ===================== Mesh gradient em WebGL =====================
+   Ruído fbm com domain warping → mapeado na paleta (ink → bordô → crimson → ember → papel),
+   veios de cinza-aço, brilho que segue o mouse, matriz de pontos cintilante e granulado. */
+(() => {
+  const canvas = document.getElementById("mesh");
+  const gl = canvas.getContext("webgl", { antialias: false, premultipliedAlpha: false });
+  if (!gl) { document.documentElement.classList.add("no-webgl"); return; }
+
+  const vert = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0., 1.); }`;
+  const frag = `
+precision highp float;
+uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_dpr;
+
+float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+float noise(vec2 p){
+  vec2 i = floor(p), f = fract(p); vec2 u = f * f * (3. - 2. * f);
+  return mix(mix(hash(i), hash(i + vec2(1., 0.)), u.x), mix(hash(i + vec2(0., 1.)), hash(i + vec2(1., 1.)), u.x), u.y);
+}
+float fbm(vec2 p){
+  float v = 0., a = .5; mat2 m = mat2(1.6, 1.2, -1.2, 1.6);
+  for (int i = 0; i < 4; i++) { v += a * noise(p); p = m * p; a *= .5; }
+  return v;
+}
+vec3 ramp(float t){
+  vec3 ink = vec3(.030, .036, .038), bordo = vec3(.36, .0, .035), crim = vec3(.78, .05, .10),
+       ember = vec3(1., .40, .34), paper = vec3(.97, .94, .86);
+  t = clamp(t, 0., 1.);
+  if (t < .28) return mix(ink, bordo, smoothstep(0., .28, t));
+  if (t < .62) return mix(bordo, crim, smoothstep(.28, .62, t));
+  if (t < .84) return mix(crim, ember, smoothstep(.62, .84, t));
+  return mix(ember, paper, smoothstep(.84, 1., t));
+}
+void main(){
+  vec2 uv = gl_FragCoord.xy / u_res;
+  vec2 p = (gl_FragCoord.xy - .5 * u_res) / u_res.y;
+  float t = u_time * .045;
+  vec2 m = (u_mouse - .5) * vec2(u_res.x / u_res.y, 1.);
+
+  vec2 q = vec2(fbm(p * .9 + t), fbm(p * .9 + vec2(5.2, 1.3) - t));
+  vec2 r = vec2(fbm(p * 1.1 + 1.8 * q + vec2(1.7, 9.2) + t * 1.4),
+                fbm(p * 1.1 + 1.8 * q + vec2(8.3, 2.8) - t * 1.1));
+  float f = smoothstep(.3, .72, fbm(p * .9 + 2. * r));
+
+  // composição estilo Newwave: arcos escuros no topo e na base que respiram com o ruído,
+  // com bordas de luz ao longo deles
+  float e1 = length((p - vec2(0., .70)) / vec2(.9, .36)) + (q.x - .5) * .5;
+  float e2 = length((p - vec2(0., -.72)) / vec2(.9, .32)) + (q.y - .5) * .5;
+  float shade = smoothstep(.7, 1.25, e1) * smoothstep(.7, 1.25, e2);
+  float rim = exp(-pow((e1 - 1.15) / .3, 2.)) + exp(-pow((e2 - 1.15) / .3, 2.));
+
+  float md = length(p - m);
+  float c = f * .56 + rim * (.24 + .24 * f) + .1 + .16 * exp(-md * md * 2.2);
+  c -= max(c - .6, 0.) * .65; // comprime os brilhos: vermelho + preto, sem estourar no branco
+  c *= mix(.14, 1., shade);
+
+  vec3 col = ramp(c);
+
+  // interior dos arcos em grafite, não preto chapado
+  col = mix(col, vec3(.07, .085, .085), (1. - shade) * .5);
+  // veios de cinza-aço (#B3B6B7)
+  float steelMask = smoothstep(.5, .75, q.y) * smoothstep(.15, .4, c) * (1. - smoothstep(.6, .85, c));
+  col = mix(col, vec3(.45, .48, .49) * (.55 + c), steelMask * .7);
+  // laterais lavadas de luz fria, como as bordas lilás do Newwave
+  float side = smoothstep(.5, 1.05, abs(p.x)) * shade * smoothstep(.3, .8, f);
+  col = mix(col, vec3(.5, .5, .5) * (.4 + c * .4), side * .3);
+
+  // matriz de pontos: só onde há luz, agrupada em manchas e cintilando
+  float cell = 6. * u_dpr;
+  vec2 g = gl_FragCoord.xy / cell;
+  vec2 id = floor(g); vec2 gv = fract(g) - .5;
+  float lum = dot(col, vec3(.299, .587, .114));
+  float cluster = smoothstep(.38, .56, fbm(id * .035 + vec2(t * 3., -t * 2.)));
+  float twinkle = step(.45, hash(id + floor(u_time * 1.5 + hash(id) * 7.)));
+  float d = smoothstep(.26, .12, length(gv));
+  float dotA = d * cluster * twinkle * smoothstep(.15, .45, lum);
+  col = mix(col, mix(vec3(1.), col * 1.6 + .25, .35), dotA * .9);
+
+  // granulado
+  col += (hash(gl_FragCoord.xy + fract(u_time) * 100.) - .5) * .055;
+
+  gl_FragColor = vec4(col, 1.);
+}`;
+
+  const sh = (type, src) => {
+    const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
+    return s;
+  };
+  let prog;
+  try {
+    prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, vert));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, frag));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(prog));
+  } catch (e) {
+    console.error(e); document.documentElement.classList.add("no-webgl"); return;
+  }
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+  const loc = gl.getAttribLocation(prog, "p");
+  gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+  const U = n => gl.getUniformLocation(prog, n);
+  const uRes = U("u_res"), uTime = U("u_time"), uMouse = U("u_mouse"), uDpr = U("u_dpr");
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+  const resize = () => {
+    canvas.width = Math.round(canvas.clientWidth * dpr);
+    canvas.height = Math.round(canvas.clientHeight * dpr);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  };
+  resize(); addEventListener("resize", resize);
+
+  const target = { x: .62, y: .55 }, mouse = { x: .62, y: .55 };
+  addEventListener("pointermove", e => {
+    const r = canvas.getBoundingClientRect();
+    target.x = (e.clientX - r.left) / r.width;
+    target.y = 1 - (e.clientY - r.top) / r.height;
+  });
+
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let visible = true;
+  new IntersectionObserver(([en]) => { visible = en.isIntersecting; }).observe(canvas);
+
+  const start = performance.now();
+  const frame = now => {
+    requestAnimationFrame(frame);
+    if (!visible) return;
+    mouse.x += (target.x - mouse.x) * .015;
+    mouse.y += (target.y - mouse.y) * .015;
+    gl.uniform2f(uRes, canvas.width, canvas.height);
+    gl.uniform1f(uTime, reduced ? 12 : (now - start) / 1000);
+    gl.uniform2f(uMouse, mouse.x, mouse.y);
+    gl.uniform1f(uDpr, dpr);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  };
+  requestAnimationFrame(frame);
+})();
+
+/* ===================== Nav: some ao descer, volta ao subir ===================== */
+(() => {
+  const nav = document.getElementById("nav");
+  let last = scrollY;
+  addEventListener("scroll", () => {
+    const y = scrollY;
+    nav.classList.toggle("scrolled", y > 40);
+    nav.classList.toggle("hidden", y > last && y > 300 && !document.body.classList.contains("locked"));
+    last = y;
+  }, { passive: true });
+
+  const btn = document.getElementById("menuBtn"), sheet = document.getElementById("sheet");
+  const toggle = open => {
+    sheet.classList.toggle("open", open);
+    document.body.classList.toggle("locked", open);
+    btn.setAttribute("aria-expanded", open);
+    btn.textContent = open ? "Fechar" : "Menu";
+  };
+  btn.addEventListener("click", () => toggle(!sheet.classList.contains("open")));
+  sheet.querySelectorAll("a").forEach(a => a.addEventListener("click", () => toggle(false)));
+})();
+
+/* ===================== Nav: destaque que desliza até o link sob o mouse ===================== */
+(() => {
+  const wrap = document.getElementById("links"), hl = wrap.querySelector(".hl");
+  const active = wrap.querySelector("a.on");
+  const moveTo = a => { hl.style.width = a.offsetWidth + "px"; hl.style.transform = `translateX(${a.offsetLeft}px)`; };
+  wrap.querySelectorAll("a").forEach(a => a.addEventListener("mouseenter", () => moveTo(a)));
+  wrap.addEventListener("mouseleave", () => moveTo(active));
+  document.fonts.ready.then(() => moveTo(active));
+  addEventListener("resize", () => moveTo(active));
+})();
+
+/* ===================== Relógio local + reveal on scroll ===================== */
+(() => {
+  const el = document.getElementById("clock");
+  const fmt = new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: "America/Sao_Paulo" });
+  const tick = () => { el.textContent = "GO " + fmt.format(new Date()); };
+  tick(); setInterval(tick, 15000);
+
+  const io = new IntersectionObserver(entries => entries.forEach(en => {
+    if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); }
+  }), { threshold: .15 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
