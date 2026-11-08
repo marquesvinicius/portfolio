@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { contact, navigation } from "@/lib/site";
 import MeshGradient from "./aurora/MeshGradient";
+import { Button, ButtonArrow } from "./ui/button";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -12,9 +13,11 @@ export default function Footer() {
       <div className="wrap relative z-[1] grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <p className="display text-[clamp(32px,4vw,52px)]">Vamos construir algo?</p>
-          <Link href="/contato" className="btn btn-light mt-6">
-            Fale comigo <span aria-hidden="true">→</span>
-          </Link>
+          <Button asChild variant="primary" className="mt-6">
+            <Link href="/contato">
+              Fale comigo <ButtonArrow />
+            </Link>
+          </Button>
         </div>
 
         <div>

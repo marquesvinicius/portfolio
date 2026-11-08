@@ -3,6 +3,7 @@
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
+import { Button, ButtonArrow } from "@/components/ui/button";
 import { usePosts } from "@/hooks/useSanity";
 
 // Pauta dos primeiros posts, exibida enquanto não há posts publicados no Sanity
@@ -86,12 +87,14 @@ export default function BlogPage() {
           <Reveal className="mt-20 text-center">
             <p className="display text-[clamp(28px,3.4vw,44px)]">Enquanto isso…</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link href="/projetos" className="btn btn-light">
-                Ver projetos <span aria-hidden="true">→</span>
-              </Link>
-              <Link href="/contato" className="btn btn-ghost">
-                Entrar em contato
-              </Link>
+              <Button asChild variant="primary">
+                <Link href="/projetos">
+                  Ver projetos <ButtonArrow />
+                </Link>
+              </Button>
+              <Button asChild variant="secondary">
+                <Link href="/contato">Entrar em contato</Link>
+              </Button>
             </div>
           </Reveal>
         </div>

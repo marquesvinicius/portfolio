@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { navigation } from "@/lib/site";
 import { getLenis } from "./SmoothScroll";
+import { Button, ButtonArrow } from "./ui/button";
 
 const isActive = (pathname: string, href: string) =>
   href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -69,19 +70,26 @@ export default function Header() {
         </nav>
 
         <div className="nav-right">
-          <Link className={`nav-cta ${isActive(pathname, "/contato") ? "on" : ""}`} href="/contato" aria-current={isActive(pathname, "/contato") ? "page" : undefined}>
-            Contato <span aria-hidden="true">↗</span>
-          </Link>
+          <Button asChild variant="primary" size="sm">
+            <Link
+              href="/contato"
+              aria-current={isActive(pathname, "/contato") ? "page" : undefined}
+            >
+              Contato <ButtonArrow direction="up-right" />
+            </Link>
+          </Button>
         </div>
 
-        <button
+        <Button
+          variant="secondary"
+          size="sm"
           className="menu-btn"
           aria-expanded={open}
           aria-controls="menu-sheet"
           onClick={() => setOpen((o) => !o)}
         >
           {open ? "Fechar" : "Menu"}
-        </button>
+        </Button>
       </header>
 
       <div className={`sheet ${open ? "open" : ""}`} id="menu-sheet">

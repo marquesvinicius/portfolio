@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, Send } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
+import { Button, ButtonArrow } from "@/components/ui/button";
 import { contact } from "@/lib/site";
 
 const channels = [
@@ -49,7 +50,7 @@ export default function ContatoPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    const body = `${form.message}\n\n— ${form.name} (${form.email})`;
+    const body = `${form.message}\n\n- ${form.name} (${form.email})`;
     window.location.href = `mailto:${contact.email}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(body)}`;
     setOpened(true);
   };
@@ -60,17 +61,17 @@ export default function ContatoPage() {
       name,
       value: form[name],
       onChange: handleChange,
-      className: "field",
+      className: textarea ? "field field-compose resize-none" : "field",
       "aria-invalid": errors[name] ? true : undefined,
       "aria-describedby": errors[name] ? `${name}-error` : undefined,
       ...props,
     };
     return (
       <div>
-        <label htmlFor={name} className="mb-2 block text-sm text-muted-foreground">
+        <label htmlFor={name} className="mb-2 block font-sans text-sm text-muted-foreground">
           {label}
         </label>
-        {textarea ? <textarea rows={6} {...common} className="field resize-none" /> : <input {...common} />}
+        {textarea ? <textarea rows={6} {...common} /> : <input {...common} />}
         {errors[name] && (
           <p id={`${name}-error`} className="mt-1.5 text-sm text-destructive">
             {errors[name]}
@@ -137,9 +138,9 @@ export default function ContatoPage() {
               </div>
               {field("subject", "Assunto", { placeholder: "Sobre o que vamos falar?" })}
               {field("message", "Mensagem", { placeholder: "Conte um pouco sobre a vaga ou o projeto..." }, true)}
-              <button type="submit" className="btn btn-light mt-2 w-full">
-                Enviar mensagem <Send className="h-4 w-4" />
-              </button>
+              <Button type="submit" variant="primary" size="lg" font="serif" className="mt-2 w-full">
+                Enviar mensagem <ButtonArrow />
+              </Button>
               {opened && (
                 <p className="text-center text-sm text-muted-foreground" role="status">
                   Seu app de email foi aberto com a mensagem pronta. Se nada abriu, escreva direto para{" "}

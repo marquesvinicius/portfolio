@@ -5,6 +5,7 @@ import MeshGradient from "@/components/aurora/MeshGradient";
 import TechOrbit from "@/components/TechOrbit";
 import ProjectCard from "@/components/ProjectCard";
 import Reveal from "@/components/Reveal";
+import { Button, ButtonArrow } from "@/components/ui/button";
 import { useFeaturedProjects } from "@/hooks/useSanity";
 
 export default function Home() {
@@ -104,9 +105,11 @@ export default function Home() {
           )}
 
           <Reveal className="mt-12 flex justify-center">
-            <Link href="/projetos" className="btn btn-ghost">
-              Ver todos os projetos <span aria-hidden="true">→</span>
-            </Link>
+            <Button asChild variant="secondary" size="lg">
+              <Link href="/projetos">
+                Ver todos os projetos <ButtonArrow />
+              </Link>
+            </Button>
           </Reveal>
         </div>
       </section>

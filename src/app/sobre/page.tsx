@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
+import { Button, ButtonArrow } from "@/components/ui/button";
 
 const focus = [
   {
@@ -147,12 +148,14 @@ export default function SobrePage() {
             Do protótipo ao deploy, com cuidado de design em cada etapa.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Link href="/projetos" className="btn btn-light">
-              Ver projetos <span aria-hidden="true">→</span>
-            </Link>
-            <Link href="/contato" className="btn btn-ghost">
-              Entrar em contato
-            </Link>
+            <Button asChild variant="primary">
+              <Link href="/projetos">
+                Ver projetos <ButtonArrow />
+              </Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/contato">Entrar em contato</Link>
+            </Button>
           </div>
         </Reveal>
       </section>

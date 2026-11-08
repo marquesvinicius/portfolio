@@ -122,14 +122,164 @@ html.lenis, html.lenis body { height: auto; }
 .reveal { opacity: 0; transform: translateY(32px); transition: opacity 1s var(--ease), transform 1s var(--ease); }
 .reveal.in { opacity: 1; transform: none; }
 
-/* ---------------- Botões ---------------- */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 22px; border-radius: 999px; font-size: 14px; font-weight: 500; transition: gap 0.3s var(--ease), background 0.3s, border-color 0.3s, color 0.3s; cursor: pointer; white-space: nowrap; }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.btn-light { background: var(--paper); color: var(--ink); }
-.btn-light:hover:not(:disabled) { background: #fff; gap: 14px; }
-.btn-ghost { border: 1px solid var(--line); color: var(--paper); background: oklch(1 0 0 / 0.02); }
-.btn-ghost:hover:not(:disabled) { background: oklch(1 0 0 / 0.07); border-color: oklch(1 0 0 / 0.2); }
-.btn-sm { padding: 7px 14px; font-size: 13px; }
+/* ---------------- Sistema de Botões Editorial (Primary, Secondary, Ghost) ----------------
+   Inspirado em estúdios digitais e na precisão da interface do Cursor.
+   Sem sombras, sem gradientes, sem brilhos exagerados; geometria arquitetural (8px),
+   transições entre 200 e 300ms e opção tipográfica em Geist Serif. */
+.ed-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  text-decoration: none;
+  transition:
+    background-color 240ms var(--ease),
+    border-color 240ms var(--ease),
+    color 240ms var(--ease);
+}
+
+.ed-btn--serif {
+  font-family: var(--font-serif);
+  font-size: 16.5px;
+  letter-spacing: -0.022em;
+}
+
+.ed-btn--sans {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 450;
+  letter-spacing: -0.01em;
+}
+
+/* Tamanhos padronizados com área clicável adequada */
+.ed-btn--sm {
+  min-height: 34px;
+  padding: 6px 13px;
+  border-radius: 7px;
+  gap: 7px;
+}
+.ed-btn--sm.ed-btn--serif { font-size: 14.5px; }
+.ed-btn--sm.ed-btn--sans { font-size: 12.5px; }
+
+.ed-btn--md {
+  min-height: 42px;
+  padding: 9px 18px;
+}
+
+.ed-btn--lg {
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: 9px;
+  gap: 12px;
+}
+.ed-btn--lg.ed-btn--serif { font-size: 18px; }
+.ed-btn--lg.ed-btn--sans { font-size: 14.5px; }
+
+.ed-btn--icon {
+  min-height: 42px;
+  width: 42px;
+  padding: 0;
+  border-radius: 8px;
+}
+
+/* 1. Primary: superfície clara editorial sobre o fundo escuro, sem brilho nem sombra */
+.ed-btn--primary {
+  background-color: var(--paper);
+  color: var(--ink);
+  border-color: var(--paper);
+}
+.ed-btn--primary:hover:not(:disabled) {
+  background-color: #ffffff;
+  border-color: #ffffff;
+  color: oklch(0.09 0.006 195);
+}
+.ed-btn--primary[aria-current="page"] {
+  border-color: var(--ember);
+}
+
+/* 2. Secondary: superfície quase preta estilo Cursor / Linear, borda hairline que acende no hover */
+.ed-btn--secondary {
+  background-color: oklch(0.125 0.004 210);
+  color: oklch(0.88 0.01 95);
+  border-color: oklch(1 0 0 / 0.09);
+}
+.ed-btn--secondary:hover:not(:disabled) {
+  background-color: oklch(0.165 0.005 210);
+  color: #ffffff;
+  border-color: oklch(1 0 0 / 0.22);
+}
+
+/* 3. Ghost: minimalista e silencioso, foco total na tipografia e na seta */
+.ed-btn--ghost {
+  background-color: transparent;
+  color: oklch(0.76 0.006 220);
+  border-color: oklch(1 0 0 / 0.05);
+}
+.ed-btn--ghost:hover:not(:disabled) {
+  background-color: oklch(1 0 0 / 0.035);
+  color: var(--paper);
+  border-color: oklch(1 0 0 / 0.14);
+}
+
+/* Estados desabilitados e foco acessível via teclado */
+.ed-btn:disabled,
+.ed-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.ed-btn:focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 3px;
+}
+
+/* Ícones e setas dentro dos botões: movimento horizontal suave (240ms) no hover */
+.ed-btn svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  transition: transform 240ms var(--ease), opacity 240ms var(--ease);
+}
+
+.ed-btn__arrow,
+.ed-btn [data-arrow] {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.88em;
+  line-height: 1;
+  opacity: 0.72;
+  transition: transform 240ms var(--ease), opacity 240ms var(--ease);
+}
+
+.ed-btn:hover:not(:disabled) .ed-btn__arrow,
+.ed-btn:hover:not(:disabled) [data-arrow="right"],
+.ed-btn:hover:not(:disabled) [data-arrow="up-right"],
+.ed-btn:focus-visible .ed-btn__arrow,
+.ed-btn:focus-visible [data-arrow="right"],
+.ed-btn:focus-visible [data-arrow="up-right"] {
+  transform: translateX(3.5px);
+  opacity: 1;
+}
+
+.ed-btn:hover:not(:disabled) [data-arrow="left"],
+.ed-btn:focus-visible [data-arrow="left"] {
+  transform: translateX(-3.5px);
+  opacity: 1;
+}
 
 /* Chips / tags discretos */
 .tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; padding: 4px 10px; border-radius: 6px; background: oklch(1 0 0 / 0.025); border: 1px solid oklch(1 0 0 / 0.05); color: var(--muted-foreground); }
@@ -153,12 +303,22 @@ html.lenis, html.lenis body { height: auto; }
 
 .field {
   width: 100%; padding: 12px 14px; border-radius: 10px;
-  background: oklch(0.12 0.004 210); border: 1px solid oklch(1 0 0 / 0.07);
+  background: oklch(1 0 0 / 0.018); border: 1px solid oklch(1 0 0 / 0.045);
   color: var(--paper); font-size: 14px; transition: border-color 0.25s, background 0.25s;
 }
-.field::placeholder { color: oklch(0.55 0.005 220); }
-.field:focus { outline: none; border-color: oklch(0.55 0.22 25 / 0.7); background: oklch(0.14 0.004 210); }
+.field::placeholder { color: oklch(0.42 0.005 220); }
+.field:focus { outline: none; border-color: oklch(0.55 0.22 25 / 0.45); background: oklch(1 0 0 / 0.028); }
 .field[aria-invalid="true"] { border-color: var(--destructive); }
+
+/* Área de mensagem: menos "caixa de form", mais composição editorial */
+.field-compose {
+  min-height: 168px; padding: 18px 18px 20px; border-radius: 14px;
+  background: oklch(0.11 0.004 210 / 0.55); border-color: oklch(1 0 0 / 0.035);
+  font-family: var(--font-serif); font-size: 17px; letter-spacing: -0.02em; line-height: 1.55;
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.03);
+}
+.field-compose::placeholder { font-family: var(--font-sans); font-size: 14px; letter-spacing: 0; line-height: 1.5; color: oklch(0.38 0.005 220); }
+.field-compose:focus { background: oklch(0.12 0.004 210 / 0.7); border-color: oklch(0.55 0.22 25 / 0.4); }
 
 /* ---------------- Aurora em CSS (fallback sem WebGL e capas de card) ---------------- */
 .aurora { position: absolute; inset: 0; overflow: hidden; background: var(--ink); isolation: isolate; }
@@ -220,14 +380,11 @@ html.lenis, html.lenis body { height: auto; }
 .sheet a.on sup { color: var(--ember); }
 .sheet a:not(.on) { color: oklch(0.86 0.01 95 / 0.6); }
 .nav-right { justify-self: end; display: flex; align-items: center; }
-.nav-cta { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 13px; font-weight: 500; transition: 0.3s var(--ease); }
-.nav-cta:hover { background: #fff; gap: 12px; }
-.nav-cta.on { box-shadow: 0 0 0 1px oklch(0.96 0.025 95), 0 0 0 4px oklch(0.55 0.22 25 / 0.55), 0 0 22px oklch(0.55 0.22 25 / 0.45); }
-.menu-btn { display: none; justify-self: end; background: none; border: 1px solid var(--line); color: var(--paper); font-size: 13px; font-weight: 500; padding: 9px 16px; border-radius: 999px; cursor: pointer; }
+.ed-btn.menu-btn, .menu-btn { display: none; justify-self: end; }
 @media (max-width: 900px) {
   .nav { grid-template-columns: 1fr auto; }
   .nav-links, .nav-right { display: none; }
-  .menu-btn { display: inline-block; }
+  .ed-btn.menu-btn, .menu-btn { display: inline-flex; }
 }
 .sheet {
   position: fixed; inset: 0; z-index: 45; background: oklch(0.13 0.008 195 / 0.9);
@@ -335,15 +492,6 @@ html.lenis, html.lenis body { height: auto; }
 .strip .s-dark b { font-family: var(--font-serif); font-weight: 400; font-size: clamp(15px, 1.7vw, 20px); letter-spacing: -0.03em; line-height: 1.05; }
 .strip .s-dark small { font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted-foreground); opacity: 0.8; }
 .case-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.case-view {
-  background: oklch(0.11 0.004 210); color: oklch(0.76 0.005 220); border: 1px solid oklch(1 0 0 / 0.065);
-  border-radius: 8px; padding: 7px 12px; font-size: 12.5px; letter-spacing: -0.01em;
-  display: inline-flex; gap: 7px; align-items: center; margin-left: auto;
-  transition: color 0.25s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease);
-}
-.case-view span { font-size: 12px; opacity: 0.65; transition: transform 0.25s var(--ease), opacity 0.25s; }
-.case-view:hover { background: oklch(0.17 0.005 210); color: #fff; border-color: oklch(1 0 0 / 0.18); }
-.case-view:hover span { transform: translateX(2px); opacity: 1; }
 .case-link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
 .case-foot a, .case-foot button { position: relative; z-index: 2; }
 
@@ -363,6 +511,7 @@ html.lenis, html.lenis body { height: auto; }
   .aurora .blob, .aurora .grain, .orbit-wheel, .orbit-label, .scroll-cue .bar::after { animation: none !important; }
   .rise-line > span, .hero-tagline, .hero-desc, .hero-foot, .fade-in { animation-duration: 0.01s !important; animation-delay: 0s !important; }
   .reveal { opacity: 1; transform: none; }
+  .ed-btn, .ed-btn svg, .ed-btn__arrow, .ed-btn [data-arrow] { transition: none !important; transform: none !important; }
 }
 
 /* Mesh no rodapé: só uma luz baixa subindo da borda inferior */

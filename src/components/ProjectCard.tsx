@@ -4,6 +4,7 @@ import Aurora, { presetFor } from "./aurora/Aurora";
 import { urlFor, type SanityProject } from "@/lib/sanity";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { categoryLabels, statusLabels } from "@/lib/site";
+import { Button, ButtonArrow } from "./ui/button";
 
 interface ProjectCardProps {
   project: SanityProject;
@@ -66,9 +67,11 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           ))}
           {remaining > 0 && <span className="tag">+{remaining}</span>}
         </div>
-        <Link href={href} className="case-view">
-          Ver estudo de caso <span aria-hidden="true">→</span>
-        </Link>
+        <Button asChild variant="secondary" size="sm" className="ml-auto">
+          <Link href={href}>
+            Ver estudo de caso <ButtonArrow />
+          </Link>
+        </Button>
       </div>
     </article>
   );

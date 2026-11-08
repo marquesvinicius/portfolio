@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import ProjectCard from "@/components/ProjectCard";
 import Reveal from "@/components/Reveal";
+import { Button, ButtonArrow } from "@/components/ui/button";
 import { useProjects } from "@/hooks/useSanity";
 import { categoryLabels } from "@/lib/site";
 import type { SanityProject } from "@/lib/sanity";
@@ -61,14 +62,16 @@ export default function ProjetosPage() {
           <Reveal className="mb-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-wrap gap-2">
               {categories.map((c) => (
-                <button
+                <Button
                   key={c.value}
+                  variant={category === c.value ? "primary" : "ghost"}
+                  size="sm"
                   onClick={() => setCategory(c.value)}
-                  className={`btn btn-sm ${category === c.value ? "btn-light" : "btn-ghost"}`}
+                  aria-pressed={category === c.value}
                 >
                   {c.label}
                   <span className="font-pixel text-[10px] opacity-60">{c.count}</span>
-                </button>
+                </Button>
               ))}
             </div>
             <label className="relative w-full lg:max-w-xs">
@@ -79,7 +82,7 @@ export default function ProjetosPage() {
                 placeholder="Buscar projetos, tecnologias..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="field pl-10"
+                className="field !pl-10"
               />
             </label>
           </Reveal>
@@ -93,9 +96,9 @@ export default function ProjetosPage() {
           ) : error ? (
             <div className="surface p-10 text-center">
               <p className="text-muted-foreground">Não foi possível carregar os projetos.</p>
-              <button onClick={() => window.location.reload()} className="btn btn-ghost mt-6">
+              <Button variant="secondary" onClick={() => window.location.reload()} className="mt-6">
                 Tentar novamente
-              </button>
+              </Button>
             </div>
           ) : filtered.length === 0 ? (
             <div className="surface p-10 text-center text-muted-foreground">
@@ -115,9 +118,11 @@ export default function ProjetosPage() {
           {!loading && !error && filtered.length > 0 && (
             <Reveal className="mt-20 text-center">
               <p className="display text-[clamp(28px,3.4vw,44px)]">Gostou do que viu?</p>
-              <Link href="/contato" className="btn btn-light mt-6">
-                Vamos conversar <span aria-hidden="true">→</span>
-              </Link>
+              <Button asChild variant="primary" className="mt-6">
+                <Link href="/contato">
+                  Vamos conversar <ButtonArrow />
+                </Link>
+              </Button>
             </Reveal>
           )}
         </div>

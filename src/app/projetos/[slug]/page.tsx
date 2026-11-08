@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { useEffect, useState, use } from "react";
-import { ArrowLeft, ExternalLink, Github, Play } from "lucide-react";
+import { ExternalLink, Github, Play } from "lucide-react";
 import { client, projectBySlugQuery, urlFor } from "@/lib/sanity";
 import type { SanityProject } from "@/lib/sanity";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
@@ -14,6 +14,7 @@ import Reveal from "@/components/Reveal";
 import MarkdownRenderer from "@/components/MarkdownRenderer";
 import ImageGallery, { Lightbox } from "@/components/ImageGallery";
 import Aurora, { presetFor } from "@/components/aurora/Aurora";
+import { Button, ButtonArrow } from "@/components/ui/button";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -55,9 +56,11 @@ export default function ProjetoPage({ params }: Props) {
         <div>
           <h1 className="display text-5xl">Projeto não encontrado</h1>
           <p className="mt-4 text-muted-foreground">{error || "O projeto que você procura não existe."}</p>
-          <Link href="/projetos" className="btn btn-ghost mt-8">
-            <ArrowLeft className="h-4 w-4" /> Voltar aos projetos
-          </Link>
+          <Button asChild variant="secondary" className="mt-8">
+            <Link href="/projetos">
+              <ButtonArrow direction="left" /> Voltar aos projetos
+            </Link>
+          </Button>
         </div>
       </div>
     );
@@ -87,13 +90,17 @@ export default function ProjetoPage({ params }: Props) {
       >
         <div className="flex flex-wrap gap-3">
           {links.map(({ href, label, icon: Icon, primary }) => (
-            <a key={href} href={href} target="_blank" rel="noopener noreferrer" className={`btn ${primary ? "btn-light" : "btn-ghost"}`}>
-              <Icon className="h-4 w-4" /> {label}
-            </a>
+            <Button key={href} asChild variant={primary ? "primary" : "secondary"}>
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                <Icon className="h-4 w-4" /> {label} <ButtonArrow direction="up-right" />
+              </a>
+            </Button>
           ))}
-          <Link href="/projetos" className="btn btn-ghost">
-            <ArrowLeft className="h-4 w-4" /> Todos os projetos
-          </Link>
+          <Button asChild variant="ghost">
+            <Link href="/projetos">
+              <ButtonArrow direction="left" /> Todos os projetos
+            </Link>
+          </Button>
         </div>
       </PageHeader>
 
@@ -192,12 +199,14 @@ export default function ProjetoPage({ params }: Props) {
         <Reveal className="wrap text-center">
           <p className="display text-[clamp(32px,4vw,56px)]">Quer ver mais?</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link href="/projetos" className="btn btn-light">
-              Outros projetos <span aria-hidden="true">→</span>
-            </Link>
-            <Link href="/contato" className="btn btn-ghost">
-              Entrar em contato
-            </Link>
+            <Button asChild variant="primary">
+              <Link href="/projetos">
+                Outros projetos <ButtonArrow />
+              </Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/contato">Entrar em contato</Link>
+            </Button>
           </div>
         </Reveal>
       </section>
