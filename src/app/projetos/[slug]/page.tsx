@@ -84,24 +84,23 @@ export default function ProjetoPage({ params }: Props) {
   return (
     <>
       <PageHeader
+        backHref="/projetos"
+        backLabel="Todos os projetos"
         kicker={`Projeto${project.featured ? " · Destaque" : ""}`}
         title={project.title}
         description={project.description}
       >
-        <div className="flex flex-wrap gap-3">
-          {links.map(({ href, label, icon: Icon, primary }) => (
-            <Button key={href} asChild variant={primary ? "primary" : "secondary"}>
-              <a href={href} target="_blank" rel="noopener noreferrer">
-                <Icon className="h-4 w-4" /> {label} <ButtonArrow direction="up-right" />
-              </a>
-            </Button>
-          ))}
-          <Button asChild variant="ghost">
-            <Link href="/projetos">
-              <ButtonArrow direction="left" /> Todos os projetos
-            </Link>
-          </Button>
-        </div>
+        {links.length > 0 && (
+          <div className="flex flex-wrap gap-3">
+            {links.map(({ href, label, icon: Icon, primary }) => (
+              <Button key={href} asChild variant={primary ? "primary" : "secondary"}>
+                <a href={href} target="_blank" rel="noopener noreferrer">
+                  <Icon className="h-4 w-4" /> {label} <ButtonArrow direction="up-right" />
+                </a>
+              </Button>
+            ))}
+          </div>
+        )}
       </PageHeader>
 
       <section className="pb-24">
@@ -195,17 +194,17 @@ export default function ProjetoPage({ params }: Props) {
         </section>
       )}
 
-      <section className="border-t border-[var(--line)] py-24">
+      <section className="py-24">
         <Reveal className="wrap text-center">
           <p className="display text-[clamp(32px,4vw,56px)]">Quer ver mais?</p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button asChild variant="secondary">
+              <Link href="/contato">Entrar em contato</Link>
+            </Button>
             <Button asChild variant="primary">
               <Link href="/projetos">
                 Outros projetos <ButtonArrow />
               </Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link href="/contato">Entrar em contato</Link>
             </Button>
           </div>
         </Reveal>

@@ -1,16 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/Reveal";
 import { Button, ButtonArrow } from "@/components/ui/button";
 import { contact } from "@/lib/site";
 
 const channels = [
-  { label: "Email", value: contact.email, href: `mailto:${contact.email}` },
-  { label: "LinkedIn", value: "marquesviniciusmelomartins", href: contact.linkedin },
-  { label: "GitHub", value: "marquesvinicius", href: contact.github },
+  { label: "Email", icon: Mail, value: contact.email, href: `mailto:${contact.email}` },
+  { label: "LinkedIn", icon: Linkedin, value: "marquesviniciusmelomartins", href: contact.linkedin },
+  { label: "GitHub", icon: Github, value: "marquesvinicius", href: contact.github },
 ];
 
 interface FormData {
@@ -102,9 +102,12 @@ export default function ContatoPage() {
                     rel="noopener noreferrer"
                     className="group flex items-center justify-between gap-4 border-b border-[var(--line)] py-6"
                   >
-                    <span>
-                      <span className="block text-xs uppercase tracking-[.16em] text-muted-foreground">{c.label}</span>
-                      <span className="display mt-2 block break-all text-[clamp(20px,2.2vw,28px)]">{c.value}</span>
+                    <span className="flex items-center gap-5">
+                      <c.icon className="h-6 w-6 shrink-0 text-muted-foreground transition-colors duration-300 group-hover:text-paper" aria-hidden="true" />
+                      <span>
+                        <span className="block text-xs uppercase tracking-[.16em] text-muted-foreground">{c.label}</span>
+                        <span className="display mt-2 block break-all text-[clamp(16px,1.7vw,22px)]">{c.value}</span>
+                      </span>
                     </span>
                     <ArrowUpRight className="h-5 w-5 shrink-0 text-muted-foreground transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-paper" />
                   </a>

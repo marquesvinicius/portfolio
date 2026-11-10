@@ -1,77 +1,102 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Aurora, { presetFor } from "./aurora/Aurora";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { presetFor } from "./aurora/Aurora";
 import { urlFor, type SanityProject } from "@/lib/sanity";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { categoryLabels, statusLabels } from "@/lib/site";
-import { Button, ButtonArrow } from "./ui/button";
 
 interface ProjectCardProps {
   project: SanityProject;
 }
 
-/** Case card editorial: metadados, capa aurora com o nome, faixa de telas e tags. */
+/**
+ * Split card editorial (inspirado no protótipo do design-lab):
+ * - Topo: imagem do projeto sob a aurora. Em repouso a aurora tinge a imagem; no hover o efeito some e a imagem original aparece.
+ * - Setas (hover/foco) navegam pelas imagens do projeto sem sair do card.
+ * - Base: ano e categoria, título em Geist Serif, resumo e stack. O card inteiro é o link para o projeto.
+ */
 export default function ProjectCard({ project }: ProjectCardProps) {
   const href = `/projetos/${project.slug.current}`;
   const year = project.publishedAt ? new Date(project.publishedAt).getFullYear() : null;
-  const screens = [project.thumbnail, ...(project.gallery ?? [])].filter((img): img is SanityImageSource => Boolean(img)).slice(0, 2);
-  const maxTechs = 5;
-  const techs = project.tech?.slice(0, maxTechs) ?? [];
-  const remaining = (project.tech?.length ?? 0) - maxTechs;
+  const images = [project.thumbnail, ...(project.gallery ?? [])].filter(
+    (img): img is SanityImageSource => Boolean(img)
+  );
+  const [slide, setSlide] = useState(0);
+
+  const go = (delta: number) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSlide((s) => (s + delta + images.length) % images.length);
+  };
+
+  const categoryText = categoryLabels[project.category] ?? project.category;
+  const techs = project.tech?.slice(0, 4).join(" / ") || "Build / Integrate / Ship";
+  const preset = presetFor(project.slug.current);
+  const hasImages = images.length > 0;
 
   return (
-    <article className="case surface">
+    <article className="split-card group">
       <Link href={href} className="case-link" aria-label={`Ver ${project.title}`} />
 
-      <div className="case-meta">
-        <span>{project.title}</span>
-        <span>{categoryLabels[project.category] ?? project.category}</span>
-        <small className="line-clamp-1">{project.description}</small>
-        <small>{year ?? statusLabels[project.status]}</small>
-      </div>
-
-      <div className="cover">
-        <Aurora preset={presetFor(project.slug.current)} />
-        <div className="logo-lock">
-          <b>{project.title}</b>
-          <small>{statusLabels[project.status] ?? "Projeto"}</small>
-        </div>
-      </div>
-
-      {screens.length > 0 && (
-        <div className="strip">
-          <div className="s-dark">
-            <small>Stack</small>
-            <b>{project.tech?.slice(0, 2).join(" + ") || "—"}</b>
-          </div>
-          {screens.map((img, i) => (
-            <div key={i}>
+      <div className="split-top">
+        {hasImages &&
+          images.map((img, idx) => (
+            <div key={idx} className={`split-media ${slide === idx ? "is-visible" : ""}`} aria-hidden={slide !== idx}>
               <Image
-                src={urlFor(img).width(480).height(300).url()}
-                alt={`${project.title} — tela ${i + 1}`}
+                src={urlFor(img).width(960).height(600).url()}
+                alt={`${project.title} — imagem ${idx + 1}`}
                 fill
-                sizes="(max-width: 768px) 33vw, 200px"
+                sizes="(max-width: 768px) 100vw, 560px"
                 className="object-cover"
               />
             </div>
           ))}
-        </div>
-      )}
 
-      <div className="case-foot">
-        <div className="flex flex-wrap gap-1.5">
-          {techs.map((tech) => (
-            <span key={tech} className="tag">
-              {tech}
-            </span>
-          ))}
-          {remaining > 0 && <span className="tag">+{remaining}</span>}
+        {/* Aurora do design-lab: sobre a imagem tinge (efeito); sem imagem é o próprio fundo */}
+        <div className={`aurora split-aurora preset-${preset} ${hasImages ? "is-tint" : ""}`} aria-hidden="true">
+          <div className="blob b2" style={{ left: 0, top: 0, width: "70%" }} />
+          <div className="blob b1" style={{ left: "40%", top: "20%" }} />
+          <div className="blob b4" style={{ left: "50%", top: "-10%" }} />
+          <div className="blob b5" style={{ left: "20%", top: "30%", width: "40%" }} />
+          <div className="dots" style={{ maskImage: "none", WebkitMaskImage: "none", opacity: 0.35 }} />
+          <div className="grain" />
         </div>
-        <Button asChild variant="secondary" size="sm" className="ml-auto">
-          <Link href={href}>
-            Ver estudo de caso <ButtonArrow />
-          </Link>
-        </Button>
+
+        {images.length > 1 && (
+          <>
+            <button type="button" onClick={go(-1)} className="split-nav split-nav--prev" aria-label="Imagem anterior do projeto">
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button type="button" onClick={go(1)} className="split-nav split-nav--next" aria-label="Próxima imagem do projeto">
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <div className="split-dots" aria-hidden="true">
+              {images.map((_, i) => (
+                <span key={i} className={`split-dot ${slide === i ? "on" : ""}`} />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="split-bottom">
+        <div className="split-row">
+          <span className="split-tag">{year ?? statusLabels[project.status] ?? "MV"}</span>
+          <span>{categoryText}</span>
+        </div>
+
+        <div className="split-body">
+          <h4>{project.title}</h4>
+          {project.description && <p className="split-desc line-clamp-2">{project.description}</p>}
+        </div>
+
+        <div className="split-row split-foot">
+          <span className="truncate">{techs}</span>
+        </div>
       </div>
     </article>
   );

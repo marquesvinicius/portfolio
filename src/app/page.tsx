@@ -41,7 +41,7 @@ export default function Home() {
       </section>
 
       {/* ============ ÓRBITA TECNOLÓGICA ============ */}
-      <section id="stack" className="relative overflow-hidden border-t border-[oklch(1_0_0/.05)] pt-[110px] pb-[60px]">
+      <section id="stack" className="relative overflow-hidden pt-[110px] pb-[60px]">
         <Reveal className="wrap grid items-center gap-12 lg:grid-cols-[.85fr_1.15fr]">
           <div className="max-w-[42ch] max-lg:mx-auto max-lg:text-center">
             <span className="kicker">Ecossistema</span>

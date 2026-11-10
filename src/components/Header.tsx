@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { navigation } from "@/lib/site";
 import { getLenis } from "./SmoothScroll";
 import { Button, ButtonArrow } from "./ui/button";
+import Logo from "./Logo";
 
 const isActive = (pathname: string, href: string) =>
   href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -42,13 +43,7 @@ export default function Header() {
   return (
     <>
       <header className={`nav ${scrolled ? "scrolled" : ""} ${hidden && !open ? "hidden-up" : ""}`}>
-        <Link className="logo" href="/" aria-label="MV Portfolio">
-          <span className="l-mv">MV</span>
-          <svg className="l-slash" viewBox="0 0 18 34" aria-hidden="true">
-            <line x1="16" y1="1" x2="1" y2="33" />
-          </svg>
-          <span className="l-port">Portfolio</span>
-        </Link>
+        <Logo />
 
         <nav className="nav-links" aria-label="Principal">
           {navigation.map((item, i) => (

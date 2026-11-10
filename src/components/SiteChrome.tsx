@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
 import SmoothScroll from "./SmoothScroll";
+import ReadingMarkers from "./ReadingMarkers";
 
 /** Navbar, rodapé e rolagem suave do site — fora do Sanity Studio, que tem a própria interface. */
 export default function SiteChrome({ children }: { children: ReactNode }) {
@@ -15,6 +16,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
     <>
       <SmoothScroll />
       <Header />
+      <ReadingMarkers />
       <main>{children}</main>
       <Footer />
     </>

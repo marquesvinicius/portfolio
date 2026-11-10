@@ -1,16 +1,17 @@
 import Link from "next/link";
 import { contact, navigation } from "@/lib/site";
 import MeshGradient from "./aurora/MeshGradient";
+import Logo from "./Logo";
 import { Button, ButtonArrow } from "./ui/button";
 
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden border-t border-[var(--line)]">
-      {/* a mesma luz da Hero, baixa e subindo da borda: fecha a página como a Hero abre */}
-      <MeshGradient intensity={0.65} scale={0.8} className="footer-glow" />
-      <div className="wrap relative z-[1] grid gap-12 py-16 md:grid-cols-[1.4fr_1fr_1fr]">
+    <footer className="footer-fade relative overflow-hidden">
+      {/* detalhe atmosférico discreto nos cantos inferiores, desaparecendo antes do copyright */}
+      <MeshGradient intensity={0.38} scale={1.15} className="footer-glow" />
+      <div className="wrap relative z-[1] grid gap-14 pb-24 pt-28 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <p className="display text-[clamp(32px,4vw,52px)]">Vamos construir algo?</p>
           <Button asChild variant="primary" className="mt-6">
@@ -55,9 +56,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="wrap relative z-[1] flex flex-wrap justify-between gap-4 border-t border-[var(--hairline)] py-6 text-xs text-muted-foreground">
-        <span>© {year} Marques Vinícius</span>
-        <span className="font-pixel">Feito com Next.js · BR</span>
+      <div className="wrap relative z-[1] flex flex-wrap items-center justify-between gap-4 border-t border-[var(--hairline)] py-9 text-xs text-muted-foreground">
+        <Logo />
+        <span>© {year} Marques V.</span>
       </div>
     </footer>
   );
