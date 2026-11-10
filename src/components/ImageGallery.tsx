@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { urlFor } from "@/lib/sanity";
@@ -28,15 +29,18 @@ export function Lightbox({ images, index, title, onChange }: LightboxProps) {
     };
     window.addEventListener("keydown", onKey);
     getLenis()?.stop();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
       getLenis()?.start();
     };
   }, [index, images.length, onChange]);
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-[oklch(0.08_0.004_195/.92)] p-4 backdrop-blur-md"
+      className="lightbox"
       onClick={() => onChange(null)}
       role="dialog"
       aria-modal="true"
@@ -45,57 +49,60 @@ export function Lightbox({ images, index, title, onChange }: LightboxProps) {
       <Button
         variant="secondary"
         size="icon"
-        className="absolute right-4 top-4 z-10"
-        onClick={() => onChange(null)}
+        className="lightbox-close"
+        onClick={(e) => {
+          e.stopPropagation();
+          onChange(null);
+        }}
         aria-label="Fechar"
       >
-        <X className="h-4 w-4" />
+        <X />
       </Button>
       {index > 0 && (
         <Button
           variant="secondary"
           size="icon"
-          className="absolute left-4 top-1/2 z-10 -translate-y-1/2"
+          className="lightbox-prev"
           onClick={(e) => {
             e.stopPropagation();
             prev();
           }}
           aria-label="Imagem anterior"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft />
         </Button>
       )}
       {index < images.length - 1 && (
         <Button
           variant="secondary"
           size="icon"
-          className="absolute right-4 top-1/2 z-10 -translate-y-1/2"
+          className="lightbox-next"
           onClick={(e) => {
             e.stopPropagation();
             next();
           }}
           aria-label="Próxima imagem"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight />
         </Button>
       )}
 
-      <div className="relative flex max-h-[86vh] max-w-[90vw] items-center justify-center" onClick={(e) => e.stopPropagation()}>
+      <div className="lightbox-stage" onClick={(e) => e.stopPropagation()}>
         <Image
           src={urlFor(images[index]).width(1600).url()}
           alt={`${title} — imagem ${index + 1}`}
           width={1600}
           height={1000}
-          className="max-h-[86vh] w-auto rounded-xl border border-[var(--hairline)] object-contain"
+          className="rounded-xl border border-[var(--hairline)] object-contain"
         />
+        {images.length > 1 && (
+          <span className="lightbox-count">
+            {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
+          </span>
+        )}
       </div>
-
-      {images.length > 1 && (
-        <span className="absolute bottom-5 left-1/2 -translate-x-1/2 font-pixel text-xs text-muted-foreground">
-          {String(index + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
-        </span>
-      )}
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -114,7 +121,7 @@ export default function ImageGallery({ images, projectTitle }: ImageGalleryProps
           <button
             key={index}
             onClick={() => setSelected(index)}
-            className="group relative aspect-video overflow-hidden rounded-xl border border-[var(--hairline)] bg-card"
+            className="group relative aspect-video cursor-pointer overflow-hidden rounded-xl border border-[var(--hairline)] bg-card"
             aria-label={`Ampliar imagem ${index + 1}`}
           >
             <Image

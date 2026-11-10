@@ -28,7 +28,7 @@ export default function PageHeader({
           <div className="fade-in mb-3.5 flex flex-wrap items-center gap-3">
             <Link
               href={backHref}
-              className="inline-flex items-center gap-1.5 font-serif text-[15px] tracking-[-0.01em] text-muted-foreground transition-colors hover:text-paper"
+              className="inline-flex items-center gap-1.5 font-serif text-[13.5px] tracking-[-0.01em] text-muted-foreground transition-colors hover:text-paper"
             >
               <span aria-hidden="true">←</span>
               <span>{backLabel ?? "Voltar"}</span>

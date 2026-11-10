@@ -68,15 +68,37 @@ export default function ProjectCard({ project }: ProjectCardProps) {
 
         {images.length > 1 && (
           <>
-            <button type="button" onClick={go(-1)} className="split-nav split-nav--prev" aria-label="Imagem anterior do projeto">
+            <button
+              type="button"
+              onClick={go(-1)}
+              className="split-nav split-nav--prev"
+              aria-label="Imagem anterior do projeto"
+            >
               <ChevronLeft className="h-4 w-4" />
             </button>
-            <button type="button" onClick={go(1)} className="split-nav split-nav--next" aria-label="Próxima imagem do projeto">
+            <button
+              type="button"
+              onClick={go(1)}
+              className="split-nav split-nav--next"
+              aria-label="Próxima imagem do projeto"
+            >
               <ChevronRight className="h-4 w-4" />
             </button>
-            <div className="split-dots" aria-hidden="true">
+            <div className="split-dots" role="tablist" aria-label={`Imagens de ${project.title}`}>
               {images.map((_, i) => (
-                <span key={i} className={`split-dot ${slide === i ? "on" : ""}`} />
+                <button
+                  key={i}
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSlide(i);
+                  }}
+                  className={`split-dot ${slide === i ? "on" : ""}`}
+                  aria-label={`Ir para imagem ${i + 1} de ${project.title}`}
+                  aria-selected={slide === i}
+                  role="tab"
+                />
               ))}
             </div>
           </>

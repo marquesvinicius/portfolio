@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import MeshGradient from "@/components/aurora/MeshGradient";
 import TechOrbit from "@/components/TechOrbit";
@@ -13,23 +14,40 @@ export default function Home() {
 
   return (
     <>
-      {/* ============ HERO: composição centralizada, espaço negativo, fundo protagonista ============ */}
+      {/* ============ HERO: tipografia editorial à esquerda, retrato à direita e mesh gradient animado ============ */}
       <section className="hero">
         <MeshGradient />
 
-        <div className="hero-center">
-          <h1 className="hero-title">
-            <span className="rise-line">
-              <span>Marques</span>
-            </span>{" "}
-            <span className="rise-line">
-              <span>V.</span>
-            </span>
-          </h1>
-          <p className="hero-tagline">Full-stack engineering · UX · AI-driven development</p>
-          <p className="hero-desc">
-            Transformando ideias complexas em experiências digitais intuitivas e bem construídas.
-          </p>
+        <div className="hero-stage">
+          <div className="hero-copy">
+            <h1 className="hero-title">
+              <span className="rise-line">
+                <span>Marques</span>
+              </span>{" "}
+              <span className="rise-line">
+                <span>V.</span>
+              </span>
+            </h1>
+            <p className="hero-tagline">Full-stack engineering · UX · AI-driven development</p>
+            <p className="hero-desc">
+              Transformando ideias complexas em experiências digitais intuitivas e bem construídas.
+            </p>
+          </div>
+
+          <figure className="hero-portrait">
+            <div className="hero-portrait-frame">
+              <Image
+                src="/assets/images/hero-portrait.png"
+                alt="Retrato de Marques Vinícius"
+                fill
+                priority
+                quality={100}
+                unoptimized
+                sizes="(max-width: 767px) 88vw, (max-width: 1023px) 52vw, 56vw"
+                className="hero-portrait-img"
+              />
+            </div>
+          </figure>
         </div>
 
         <div className="hero-foot">
@@ -41,12 +59,12 @@ export default function Home() {
       </section>
 
       {/* ============ ÓRBITA TECNOLÓGICA ============ */}
-      <section id="stack" className="relative overflow-hidden pt-[110px] pb-[60px]">
+      <section id="stack" className="relative overflow-hidden pt-[98px] pb-[54px]">
         <Reveal className="wrap grid items-center gap-12 lg:grid-cols-[.85fr_1.15fr]">
           <div className="max-w-[42ch] max-lg:mx-auto max-lg:text-center">
             <span className="kicker">Ecossistema</span>
-            <h2 className="display text-[clamp(38px,5.5vw,76px)]">Arquitetura &amp; Stack</h2>
-            <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
+            <h2 className="display text-[clamp(34px,4.95vw,68px)]">Arquitetura &amp; Stack</h2>
+            <p className="mt-4 text-[13.5px] leading-relaxed text-muted-foreground">
               Um núcleo enxuto para construir aplicações ponta a ponta — da experiência na interface à modelagem
               relacional e automação com IA.
             </p>
@@ -77,7 +95,7 @@ export default function Home() {
           </Reveal>
 
           {loading ? (
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {[0, 1].map((i) => (
                 <div key={i} className="surface aspect-[4/3] animate-pulse" />
               ))}
@@ -95,7 +113,7 @@ export default function Home() {
               .
             </p>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {projects.map((project) => (
                 <Reveal key={project._id}>
                   <ProjectCard project={project} />

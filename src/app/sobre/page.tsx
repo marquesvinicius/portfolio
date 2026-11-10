@@ -37,14 +37,14 @@ const chips = [
 /** Retrato no anel fino com chips de vidro orbitando — o círculo da primeira versão do redesign. */
 function PortraitOrbit() {
   return (
-    <div className="relative mx-auto aspect-square w-[min(100%,440px)]">
+    <div className="portrait-orbit relative mx-auto aspect-square">
       <div className="absolute inset-0 rounded-full border border-[oklch(1_0_0/.14)]" />
       <div className="absolute inset-[14%] overflow-hidden rounded-full border border-[var(--hairline)] bg-[radial-gradient(circle_at_50%_40%,oklch(0.38_0.15_25/.55),transparent_70%)]">
         <Image src="/assets/images/avatar.png" alt="Marques Vinícius" fill sizes="320px" className="object-cover" priority />
       </div>
       <ul className="orbit-wheel outer" aria-hidden="true">
         {chips.map((c) => (
-          <li key={c.label} className="orbit-node" style={{ "--a": `${c.a}deg`, "--r": "min(220px, 45vw)" } as CSSProperties}>
+          <li key={c.label} className="orbit-node" style={{ "--a": `${c.a}deg` } as CSSProperties}>
             <span className="orbit-label glass rounded-full px-4 py-2 text-sm">{c.label}</span>
           </li>
         ))}
@@ -63,11 +63,11 @@ export default function SobrePage() {
       />
 
       {/* História */}
-      <section className="section pt-12">
+      <section className="section overflow-x-clip pt-12">
         <div className="wrap grid items-center gap-16 lg:grid-cols-[1.1fr_.9fr]">
           <Reveal>
             <span className="kicker">Perfil</span>
-            <h2 className="display text-[clamp(32px,4vw,54px)]">Software que é bom de usar, não só de rodar.</h2>
+            <h2 className="display text-[clamp(29px,3.6vw,49px)]">Software que é bom de usar, não só de rodar.</h2>
             <div className="mt-8 grid gap-5 leading-relaxed text-muted-foreground">
               <p>
                 Sou desenvolvedor full-stack e o que mais me move é a experiência de quem usa: interfaces bem

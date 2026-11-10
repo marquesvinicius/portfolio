@@ -13,7 +13,7 @@ export default function Footer() {
       <MeshGradient intensity={0.38} scale={1.15} className="footer-glow" />
       <div className="wrap relative z-[1] grid gap-14 pb-24 pt-28 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
-          <p className="display text-[clamp(32px,4vw,52px)]">Vamos construir algo?</p>
+          <p className="display text-[clamp(29px,3.6vw,47px)]">Vamos construir algo?</p>
           <Button asChild variant="primary" className="mt-6">
             <Link href="/contato">
               Fale comigo <ButtonArrow />
@@ -57,7 +57,7 @@ export default function Footer() {
       </div>
 
       <div className="wrap relative z-[1] flex flex-wrap items-center justify-between gap-4 border-t border-[var(--hairline)] py-9 text-xs text-muted-foreground">
-        <Logo />
+        <Logo mark />
         <span>© {year} Marques V.</span>
       </div>
     </footer>

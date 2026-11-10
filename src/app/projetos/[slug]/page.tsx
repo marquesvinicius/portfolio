@@ -104,7 +104,7 @@ export default function ProjetoPage({ params }: Props) {
       </PageHeader>
 
       <section className="pb-24">
-        <div className="wrap grid gap-10 lg:grid-cols-[1fr_320px]">
+        <div className="wrap grid gap-10 lg:grid-cols-[1fr_288px]">
           {/* Capa */}
           <Reveal className="lg:col-span-2">
             {project.thumbnail ? (
@@ -125,7 +125,7 @@ export default function ProjetoPage({ params }: Props) {
             ) : (
               <div className="relative grid aspect-video place-items-center overflow-hidden rounded-3xl border border-[var(--hairline)]">
                 <Aurora preset={presetFor(project.slug.current)} />
-                <span className="display relative z-10 text-[clamp(36px,6vw,80px)]">{project.title}</span>
+                <span className="display relative z-10 text-[clamp(32px,5.4vw,72px)]">{project.title}</span>
               </div>
             )}
           </Reveal>

@@ -88,7 +88,7 @@ export default function ProjetosPage() {
           </Reveal>
 
           {loading ? (
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {[0, 1, 2, 3].map((i) => (
                 <div key={i} className="surface aspect-[4/3] animate-pulse" />
               ))}
@@ -106,7 +106,7 @@ export default function ProjetosPage() {
               <p className="mt-1 text-sm">Tente outra categoria ou termo de busca.</p>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               {filtered.map((project) => (
                 <Reveal key={project._id}>
                   <ProjectCard project={project} />

@@ -65,10 +65,10 @@ export default function BlogPage() {
 
           <ol className="border-t border-[var(--line)]">
             {rows.map((r, i) => (
-              <Reveal as="li" key={r.key} className="group grid gap-3 border-b border-[var(--line)] py-8 md:grid-cols-[80px_1fr_220px] md:items-baseline md:gap-8">
+              <Reveal as="li" key={r.key} className="group grid gap-3 border-b border-[var(--line)] py-8 md:grid-cols-[72px_1fr_200px] md:items-baseline md:gap-8">
                 <span className="font-pixel text-xs text-muted-foreground">{String(i + 1).padStart(2, "0")}</span>
                 <div>
-                  <h3 className="display text-[clamp(26px,3vw,40px)] transition-colors group-hover:text-[oklch(0.85_0.09_25)]">
+                  <h3 className="display text-[clamp(23px,2.7vw,36px)] transition-colors group-hover:text-[oklch(0.85_0.09_25)]">
                     {r.title}
                   </h3>
                   {r.excerpt && <p className="mt-3 max-w-[60ch] leading-relaxed text-muted-foreground">{r.excerpt}</p>}
@@ -85,7 +85,7 @@ export default function BlogPage() {
           </ol>
 
           <Reveal className="mt-20 text-center">
-            <p className="display text-[clamp(28px,3.4vw,44px)]">Enquanto isso…</p>
+            <p className="display text-[clamp(25px,3.05vw,40px)]">Enquanto isso…</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Button asChild variant="primary">
                 <Link href="/projetos">
